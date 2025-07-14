@@ -7,13 +7,13 @@ import html from 'remark-html';
 const blogDirectory = path.join(process.cwd(), 'content/blog');
 
 export interface BlogPost {
-  slug: string;  // Changed from 'id' to 'slug'
+  slug: string;
   title: string;
   date: string;
   category: string;
   description: string;
   image?: string;
-  contentHtml: string;
+  contentHtml?: string; // Make this optional
 }
 
 export function getSortedBlogPosts(): BlogPost[] {
@@ -50,7 +50,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost> {
   const fullPath = path.join(blogDirectory, `${slug}.md`);
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const matterResult = matter(fileContents);
-  
+
   const processedContent = await remark()
     .use(html)
     .process(matterResult.content);
