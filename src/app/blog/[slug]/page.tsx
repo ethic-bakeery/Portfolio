@@ -2,13 +2,13 @@ import { getBlogPost } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 
-export default async function BlogPostPage({ 
-  params 
-}: { 
-  params: { slug: string } 
+export default async function BlogPostPage({
+  params
+}: {
+  params: { slug: string }
 }) {
   let post;
-  
+
   try {
     post = await getBlogPost(params.slug);
   } catch (error) {
@@ -28,7 +28,7 @@ export default async function BlogPostPage({
               day: 'numeric'
             })} • {post.category}
           </p>
-          
+
           {post.image && (
             <div className="relative w-full h-96 mb-8 rounded-lg overflow-hidden">
               <Image
@@ -40,14 +40,14 @@ export default async function BlogPostPage({
               />
             </div>
           )}
-          
+
           <p className="text-xl text-gray-700 mb-8">{post.description}</p>
         </div>
 
         {/* Post Content */}
-        <div 
+        <div
           className="prose lg:prose-xl dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
+          dangerouslySetInnerHTML={{ __html: post.contentHtml || "" }}
         />
       </article>
     </div>
