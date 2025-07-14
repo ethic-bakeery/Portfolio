@@ -6,7 +6,7 @@ import {
   SiPython,
   SiCplusplus,
   SiDocker,
-  SiAmazonaws,
+  SiAmazon,
   SiPostgresql,
   SiGit,
   SiMysql,
@@ -17,8 +17,8 @@ import {
   SiLinux,
   SiBootstrap,
   SiSpringboot,
-  SiJava,
-} from "react-icons/si";
+} from 'react-icons/si';
+
 import Navbar from "@/components/Navbar";
 import { Database, Shield, Cpu, Network, Terminal, Bug, HardDrive, Code } from "lucide-react";
 
@@ -30,7 +30,6 @@ const skills = {
       { name: "Python", icon: SiPython, level: 90 },
       { name: "C", icon: SiCplusplus, level: 85 },
       { name: "C++", icon: SiCplusplus, level: 80 },
-      { name: "Java", icon: SiJava, level: 75 },
       { name: "Bash", icon: Terminal, level: 85 },
       { name: "PowerShell", icon: Terminal, level: 80 },
       { name: "JavaScript", icon: SiJavascript, level: 75 },
@@ -80,7 +79,6 @@ const skills = {
       { name: "Linux", icon: SiLinux, level: 90 },
       { name: "Windows Security", icon: Shield, level: 85 },
       { name: "Docker", icon: SiDocker, level: 80 },
-      { name: "AWS Security", icon: SiAmazonaws, level: 75 },
       { name: "Sysmon", icon: Network, level: 80 },
       { name: "OSQuery", icon: Terminal, level: 75 },
     ],
