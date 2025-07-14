@@ -16,7 +16,7 @@ export default function BlogPage() {
             <Link
               key={category}
               href={`/blog/category/${encodeURIComponent(category)}`}
-              className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 bg-green-200 text-green-800 rounded-lg hover:bg-green-300 dark:bg-green-700 dark:text-green-100 dark:hover:bg-green-600"
             >
               {category}
             </Link>
