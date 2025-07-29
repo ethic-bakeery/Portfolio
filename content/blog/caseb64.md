@@ -2,7 +2,7 @@
 title: "Digital Forensics Case"
 date: 2025-02-08
 description: "Acquire the critical skills of evidence preservation, disk imaging, and artefact analysis for use in court."
-category: " Digital Forensic"
+category: "Digital Forensic"
 image: /BTLO/caseb64.png
 draft: false
 ---
@@ -234,7 +234,7 @@ A Forensics Lab Analyst can perform the following steps to mount a forensic disk
 2. **What is the SHA1 hash of the physical drive and forensic image?**  
 To answer this question quickly and accurately, open PowerShell and navigate to the directory where the physical drive and forensic image are stored. Use the built-in `Get-FileHash` command to generate the hash. You can use different hashing algorithms like MD5, SHA256, or SHA1, but for this task, we are particularly interested in the SHA1 hash.
 
-![Filehash](/blog-images/caseb4/Task6-q2.png)
+![Filehash](/blog-images/caseb4/Task6-q2.PNG)
 
 **Answer:** d82f393a67c6fc87a023b50c785a7247ab1ac395
 
@@ -242,7 +242,7 @@ To answer this question quickly and accurately, open PowerShell and navigate to 
 
 To determine the total number of files, including hidden ones, simply open the file explorer and navigate to the USB flash drive. Make sure to check the "Hidden items" box in the "View" tab. This will display all files, including those that are normally hidden.
 
-![Hidden Files](/blog-images/caseb4/Task6-q3.png)
+![Hidden Files](/blog-images/caseb4/Task6-q3.PNG)
 
 **Answer:** 8
 
@@ -250,7 +250,7 @@ To determine the total number of files, including hidden ones, simply open the f
 
 To find out how many files were deleted, compare the files in the file explorer to those in your copy of the USB drive image. In the image below, I’ve pointed out the deleted files for better understanding.
 
-![Hidden Files](/blog-images/caseb4/Task6-q4.png)
+![Hidden Files](/blog-images/caseb4/Task6-q4.PNG)
 
 **Answer:** 6
 
@@ -258,7 +258,7 @@ To find out how many files were deleted, compare the files in the file explorer 
 
 To identify the number of corrupted files, open FTK Imager and sort the files by size. Any files with a size of 0 bytes will be displayed. These files are considered corrupted.
 
-![Hidden Files](/blog-images/caseb4/Task6-q5.png)
+![Hidden Files](/blog-images/caseb4/Task6-q5.PNG)
 
 As shown in the image, there are three files with no content.
 **Answer:** 3

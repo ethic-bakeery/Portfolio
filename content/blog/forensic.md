@@ -3,7 +3,7 @@ title: "Forensic"
 date: 2025-02-08
 description: "This memory dump originates from a compromised system. Perform in-depth forensics to explore its internals."
 image: /Forensics/mem.png
-category: Digital Forensic
+category: "Digital Forensic"
 ---
 
 ### Task 1: Volatility Forensics

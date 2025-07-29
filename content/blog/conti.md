@@ -9,21 +9,8 @@ category: Incident Response
 ### SITREP
 Several employees reported that they were unable to log into Outlook. Additionally, the Exchange system administrator discovered that they could not access the Exchange Admin Center. Upon initial triage, they found multiple suspicious README files on the Exchange server.
 
-Below is a copy of the ransomware note:
-![conti](/blog-images/ransomware/st.png)
-<Warning>Warning: Do NOT attempt to visit or interact with any URLs displayed in the ransom note.</Warning>
-
 Read the latest information on the Conti ransomware [here](https://www.bleepingcomputer.com/news/security/fbi-cisa-and-nsa-warn-of-escalating-conti-ransomware-attacks/).
 
-### Exchange Server Compromised
-
-Below are the error messages encountered by the Exchange administrator and employees when attempting to access Exchange or Outlook.
-
-Exchange Control Panel:
-![error1](/blog-images/ransomware/error1.png)
-
-Outlook Web Access:
-![error1](/blog-images/ransomware/error2.png)
 
 **Task:** You have been assigned to investigate this incident. Use Splunk to answer the questions below regarding the Conti ransomware attack.
 

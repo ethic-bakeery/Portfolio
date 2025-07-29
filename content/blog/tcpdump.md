@@ -30,7 +30,7 @@ Here is a list of questions to guide you through the analysis process and help y
 
 ### Basic Capture Options
 Here is a table of common Tcpdump switches that allow us to customize our captures. These switches can be combined to adjust how the tool displays output in STDOUT and what is stored in the capture file. While this is not an exhaustive list, it covers the most frequently used and useful options.
-
+```bash
 | Parameter         | Explanation                                                       |
 |-------------------|-------------------------------------------------------------------|
 | `-i <interface>`   | Specifies the network interface to capture traffic from.         |
@@ -50,7 +50,7 @@ Here is a table of common Tcpdump switches that allow us to customize our captur
 | `-f <expression>`  | Applies a filter expression to capture only specific traffic.    |
 | `-e`               | Displays the link-layer header information.                      |
 | `-T <type>`        | Specifies the output format (e.g., `json`, `pcap`, etc.).         |
-
+```
 Before we begin, it's important to understand the structure of a pcap file.
 ![default capture](/blog-images/tcpdump/st1.PNG)
 
@@ -170,7 +170,7 @@ You see the host is not resolved here
 ## Filtering and Advanced Syntax Options
 Using advanced filtering options, as outlined below, allows us to limit the amount of traffic captured and outputted, reducing both disk space usage and buffer processing time. These filters, when combined with standard tcpdump syntax, help make data capture more efficient.
 ### **TCPDump Filters**
-
+```bash
 | **Filter** | **Result** |
 | --- | --- |
 | **host** | Filters traffic involving the designated host, bi-directional. |
@@ -183,7 +183,7 @@ Using advanced filtering options, as outlined below, allows us to limit the amou
 | **and / &&** | Combines two filters, such as filtering traffic from a specific source host *and* a specific port. |
 | **or** | Allows a match on either of two conditions; both do not need to be true. |
 | **not** | Excludes a specific filter condition; for example, `not UDP` will exclude UDP traffic. |
-
+```
 
 ### Source/Destination Filter
 The `src` and `dst` filters help narrow down traffic based on source and destination IP addresses. For example, in an incident where a host is contacting an external server, you can use these filters to isolate the traffic based on the source (the host) or the destination (the external server) to investigate the connection.
@@ -279,7 +279,7 @@ In tcpdump, we can filter traffic based on protocol numbers using the `proto` pa
 In certain situations, you may want to filter traffic based on a specific range of ports, especially when you're interested in well-known ports. Instead of displaying traffic for all ports, you can use the `portrange` parameter to focus on a particular range.
 
 - **Example**: To capture traffic within the port range `0-1024`, use the following command:  
-  ```plaintext
+```plaintext
   tcpdump -r capture.pcap portrange 0-1024
 ```
 Additionally, you can combine the portrange filter with the greater or less parameters to detect anomalies or infiltration attempts in your network. For example, if you're looking for large packets within well-known ports, you can filter traffic with a packet size greater than 1000 bytes in the 0-1024 port range:
@@ -320,13 +320,11 @@ Lets extract info in our ASCII vallues
 
 Using `-l` in this way allowed us to examine the capture quickly and grep for keywords or formatting we suspected could be there. In this case, we used the `-l` to pass the output to grep and looking for any instance of the phrase `*.txt`. This shows us every line with our search in it, and we can see the results above. Using modifiers and redirecting output can be a quick way to scrape websites for email addresses, naming standards, and much more.
 
-| **Link** | **Description** |
-| --- | --- |
-| [IP Protocol](https://tools.ietf.org/html/rfc791) | `RFC 791` describes IP and its functionality. |
-| [ICMP Protocol](https://tools.ietf.org/html/rfc792) | `RFC 792` describes ICMP and its functionality. |
-| [TCP Protocol](https://tools.ietf.org/html/rfc793) | `RFC 793` describes the TCP protocol and how it functions. |
-| [UDP Protocol](https://tools.ietf.org/html/rfc768) | `RFC 768` describes UDP and how it operates. |
-| [RFC Quick Links](https://en.wikipedia.org/wiki/List_of_RFCs#Topical_list) | This Wikipedia article contains a large list of protocols tied to the RFC that explains their implementation. |
+- [IP Protocol (RFC 791)](https://tools.ietf.org/html/rfc791): Describes IP and its functionality.  
+- [ICMP Protocol (RFC 792)](https://tools.ietf.org/html/rfc792): Describes ICMP and its functionality.  
+- [TCP Protocol (RFC 793)](https://tools.ietf.org/html/rfc793): Describes the TCP protocol and how it functions.  
+- [UDP Protocol (RFC 768)](https://tools.ietf.org/html/rfc768): Describes UDP and how it operates.  
+- [RFC Quick Links](https://en.wikipedia.org/wiki/List_of_RFCs#Topical_list): This Wikipedia article contains a large list of protocols tied to the RFC that explains their implementation.
 
 ### Conclusion
 

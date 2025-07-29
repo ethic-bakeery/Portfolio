@@ -3,7 +3,7 @@ title: "Setup Wazuh Lab"
 date: 2025-01-28
 description: "Analyze Windows Security Event logs to investigate an attempted RDP brute-force attack."
 image: /wazuh/wazuh.jpg
-category: "setup"
+category: "Tooling"
 ---
 
 ### Requirements 
@@ -13,14 +13,14 @@ To install a Wazuh lab, certain requirements must be met as outlined on the offi
 
 ### Operating System
 The central components of Wazuh require a 64-bit Intel or AMD Linux processor (x86_64/AMD64 architecture). Wazuh officially supports the following operating systems:
-
+```
 | **Operating System**            | **Supported Versions**                              |
 |----------------------------------|----------------------------------------------------|
 | **Amazon Linux**                | 2, 2023                                            |
 | **CentOS**                      | 7, 8                                               |
 | **Red Hat Enterprise Linux**    | 7, 8, 9                                            |
 | **Ubuntu**                      | 16.04, 18.04, 20.04, 22.04, 24.04                  |
-
+```
 ### Installing Wazuh
 To perform a quick installation of Wazuh, you can use the Wazuh installation assistant. Execute the following command:
 
@@ -30,7 +30,7 @@ curl -sO https://packages.wazuh.com/4.10/wazuh-install.sh && sudo bash ./wazuh-i
 
 If the system does not meet the installation requirements, an error message will appear, as shown below:
 
-![error](/blog-images/wazuh/error.png)
+![error](/blog-images/wazuh/error.PNG)
 
 Once the installation is complete, the output will display access credentials and confirm a successful installation:
 
@@ -49,7 +49,7 @@ Access the Wazuh web interface using the provided URL and credentials:
 
 Upon visiting the URL, you will see a login page:
 
-![login](/blog-images/wazuh/login.png)
+![login](/blog-images/wazuh/login.PNG)
 
 Enter your credentials to access the Wazuh dashboard.
 

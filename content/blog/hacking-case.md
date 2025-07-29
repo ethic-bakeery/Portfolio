@@ -3,7 +3,7 @@ title: "Forensic Analysis of an Abandoned Hacker's Laptop"
 date: 2025-04-11
 description: "In this forensic walkthrough, we dive into a real-world scenario involving an abandoned Dell CPi notebook suspected of being used for wireless hacking activities. Using a multi-part disk image, we uncover traces of hacking tools, analyze usage artifacts, and attempt to link the digital evidence to the alleged hacker known as 'Mr. Evil.' Join me as we explore how digital forensics helps trace the footsteps of a cyber intruder and piece together their digital trail"
 image: /caseb4/icon.png
-category: "Digital Forensics"
+category: "Digital Forensic"
 ---
 
 ## Scenario
@@ -65,7 +65,7 @@ Browse to the location of the disk image you downloaded.
 
 ### Step 6  
 For practice purposes, select all the ingest modules (i.e., check all the boxes). This will ensure that Autopsy returns data from all relevant sources.  
-![Create](/blog-images/blog-images/NIST/007.PNG)
+![Create](/blog-images/NIST/007.PNG)
 
 ---
 

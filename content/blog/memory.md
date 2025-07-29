@@ -3,7 +3,7 @@ title: "Memory Forensics Walkthrough"
 date: 2025-02-01
 description: "Using Volatility to Perform Memory Forensics and Extract Flags"
 image: /memory/mem.png
-category: Digital Forensic
+category: "Digital Forensic"
 ---
 
 [Challenge Room](https://tryhackme.com/room/memoryforensics)

@@ -3,7 +3,7 @@ title: "Bruteforce Analysis"
 date: 2025-01-23
 description: "Analyze Windows Security Event logs to investigate an attempted RDP bruteforce attack."
 image: /letsdefend/bruteforce.png
-category: "logs"
+category: "Logs analysis"
 ---
 
 ### Scenario
