@@ -3,7 +3,7 @@ title: "Mastering TCPdump"
 date: 2025-03-11
 description: "This guide demonstrates how to use tcpdump to analyze and capture network traffic"
 image: /tcpdump/tcpdump.png
-category: "Network Traffic"
+category: "Traffic Analysis"
 ---
 
 ### TCPdump

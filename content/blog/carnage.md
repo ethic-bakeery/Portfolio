@@ -1,7 +1,7 @@
 ---
 title: "Carnage"
 date: 2024-01-16
-category: "Wireshark"
+category: "Traffic Analysis"
 description: "Apply your analytical skills to analyze the malicious network traffic using Wireshark"
 image: "/carnage/carnage.png"
 ---
