@@ -128,6 +128,23 @@ export default function ContactPage() {
             >
               <img src="/twitter.png" alt="X (Twitter)" className="h-6 w-6" />
             </a>
+             <a
+    href="https://tryhackme.com/p/bakeery"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group rounded-lg border border-border bg-background p-4 transition-colors hover:bg-accent"
+  >
+    <img src="/thm.png" alt="TryHackMe" className="h-6 w-6" />
+  </a>
+
+  <a
+    href="https://medium.com/@bakeery"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group rounded-lg border border-border bg-background p-4 transition-colors hover:bg-accent"
+  >
+    <img src="/me.png" alt="Medium" className="h-6 w-6" />
+  </a>
 
           </motion.div>
 
