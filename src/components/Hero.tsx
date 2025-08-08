@@ -24,7 +24,9 @@ export default function Hero() {
   };
   const [text, setText] = useState("");
   const [isTypingComplete, setIsTypingComplete] = useState(false);
-  const fullText = "building real-world solutions through automated detection, forensic insight, and relentless problem-solving";
+  const fullText = "Curious security analyst focused on detection, forensics, and problem-solving"
+
+;
 
   useEffect(() => {
     let currentIndex = 0;
