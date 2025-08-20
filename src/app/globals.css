@@ -53,6 +53,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -100,10 +101,12 @@
 
 /* Animations */
 @keyframes cursor-blink {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
@@ -117,6 +120,7 @@
   from {
     width: 0;
   }
+
   to {
     width: 100%;
   }
@@ -149,4 +153,75 @@
 
 .bg-grid-black {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(0 0 0 / 0.02)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+}
+
+/* Markdown specific styles */
+.markdown-content {
+  line-height: 1.7;
+}
+
+.markdown-content pre {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.markdown-content code {
+  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Ubuntu Mono', monospace;
+}
+
+.markdown-content pre code {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.markdown-content th {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.dark .markdown-content th {
+  background-color: #374151;
+}
+
+.dark .markdown-content th,
+.dark .markdown-content td {
+  border-color: #4b5563;
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Multiple images styling */
+.markdown-content p:has(+ p:has(img)) img,
+.markdown-content p:has(img)+p:has(img) img {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content p:has(img) {
+  margin: 0.5rem 0;
 }

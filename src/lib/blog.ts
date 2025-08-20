@@ -51,16 +51,13 @@ export async function getBlogPost(slug: string): Promise<BlogPost> {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const matterResult = matter(fileContents);
 
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+  // Return the raw markdown content instead of converting to HTML
+  const content = matterResult.content;
 
   return {
     slug,
-    contentHtml,
+    contentHtml: content, // Now contains raw markdown
     ...(matterResult.data as Omit<BlogPost, 'slug' | 'contentHtml'>),
-    // Ensure image path is properly returned
     image: matterResult.data.image || undefined,
   };
 }
