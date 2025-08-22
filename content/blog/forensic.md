@@ -13,7 +13,7 @@ For this lab, we are using **Volatility version 2** for analysis.
 #### Question 1: What is the Operating System of this Dump File?
 To determine the operating system of the memory dump, we can utilize the `imageinfo` or `kdbgscan` plugins. These plugins assist in identifying the OS profile for the dump file.
 
-```
+```bash
 vol2.py -f victim.raw imageinfo
 vol2.py -f victim.raw kdbgscan
 ```
@@ -27,7 +27,7 @@ Both commands revealed that the dump corresponds to a **Windows 7 SP1 64-bit (Wi
 #### Question 2: What is the PID of SearchIndexer?
 To identify the PID of the SearchIndexer process, we can examine the list of processes using various plugins. The relevant ones for listing processes include:
 
-```
+```bash
 volatility --profile=PROFILE pstree -f file.dmp  # Get process tree (not hidden)
 volatility --profile=PROFILE pslist -f file.dmp  # Get process list (EPROCESS)
 volatility --profile=PROFILE psscan -f file.dmp  # Get hidden processes (malware)
@@ -49,7 +49,7 @@ From the output, we can find the SearchIndexer process with PID **2180**.
 #### Question 3: What is the last directory accessed by the user?
 To identify the last directory accessed by the user, the hint refers to searching for "a bag full of shells in your backyard." This suggests using the **shellbags** plugin.
 
-```
+```bash
 vol2.py -f victim.raw --profile=Win7SP1x64 shellbags
 ```
 
@@ -64,7 +64,7 @@ The **Shellbags** plugin helps identify recently accessed directories and files 
 #### Question 4: There are many suspicious open ports; which one is it? (ANSWER format: protocol:port)
 To identify suspicious open ports, we can use the **netscan** plugin to check for network connections.
 
-```
+```bash
 vol2.py -f victim.raw --profile=Win7SP1x64 netscan
 ```
 
@@ -79,7 +79,7 @@ This question asks us to find malicious processes. A quick Google search shows t
 
 ![Google Malfind Search](/blog-images/Forensics/malfind.PNG)
 
-```
+```bash
 vol2.py -f victim.raw --profile=Win7SP1x64 malfind | grep Process:
 ```
 
@@ -94,7 +94,7 @@ In the previous task, we identified malicious processes. Now, let's dig deeper i
 
 We start by extracting memory dumps from the identified malicious processes.
 
-```
+```bash
 vol2.py -f victim.raw --profile=Win7SP1x64 memdump --pid=1860 --dump-dir=./
 vol2.py -f victim.raw --profile=Win7SP1x64 memdump --pid=1820 --dump-dir=./
 vol2.py -f victim.raw --profile=Win7SP1x64 memdump --pid=2464 --dump-dir=./
@@ -106,7 +106,7 @@ Now, let's answer the IOC-related questions.
 
 We can obtain all domains by running the following command:
 
-```
+```bash
 strings -n 8 1820.dmp 1860.dmp 2464.dmp | grep -Eo 'www\.go[^.]*\.ru|www\.i[^.]*\.com|www\.ic[^.]*\.com'
 ```
 
@@ -125,7 +125,7 @@ This command extracts domain names associated with the identified processes.
 
 For the IP addresses, we can use the following command:
 
-```
+```bash
 strings -n 8 1820.dmp 1860.dmp 2464.dmp | grep -Eo '202\.[0-9]{1,3}\.233\.[0-9]{1,3}|[0-9]{1,3}\.200\.[0-9]{1,3}\.164|209\.190\.[0-9]{1,3}\.[0-9]{1,3}'
 ```
 
@@ -145,7 +145,7 @@ We can use the `envars` plugin with the `-p` flag to extract the unique environm
 ![env](/blog-images/Forensics/Task3-q7.PNG)
 by given the -p 2464 we can get the variable name
 
-```
+```bash
 vol2.py -f victim.raw --profile=Win7SP1x64 envars -p 2464
 ```
 

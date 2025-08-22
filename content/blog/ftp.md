@@ -82,7 +82,7 @@ In this case, the password used was `napier`. Since FTP transmits data in plain 
 
 ### ✅ Positive Completion Replies
 
-```
+
 | Code | Meaning                            |
 |------|------------------------------------|
 | 200  | Command OK                         |
@@ -90,17 +90,17 @@ In this case, the password used was `napier`. Since FTP transmits data in plain 
 | 221  | Service closing control connection |
 | 226  | Closing data connection            |
 | 230  | User logged in, proceed            |
-```
+
 
 ### 🟡 Positive Intermediate Replies
-```
+
 | Code | Meaning                        |
 |------|--------------------------------|
 | 331  | Username OK, need password     |
 | 332  | Need account for login         |
-```
+
 ### ⚠️ Transient Negative Replies
-```
+
 | Code | Meaning                              |
 |------|--------------------------------------|
 | 421  | Service not available                |
@@ -108,20 +108,20 @@ In this case, the password used was `napier`. Since FTP transmits data in plain 
 | 450  | File unavailable                     |
 | 451  | Local error in processing            |
 | 452  | Insufficient storage space           |
-```
+
 ### ❌ Permanent Negative Replies
-```
+
 | Code | Meaning                              |
 |------|--------------------------------------|
 | 530  | Not logged in                        |
 | 550  | File unavailable or access denied    |
-```
+
 ---
 
 ## 🔍 Useful Wireshark Filters for FTP
 
 ### Basic FTP Commands
-```
+
 | Filter                              | Purpose                                 |
 |-------------------------------------|-----------------------------------------|
 | `ftp`                               | Show all FTP protocol packets           |
@@ -132,13 +132,13 @@ In this case, the password used was `napier`. Since FTP transmits data in plain 
 | `ftp.response.code == 230`          | Show successful logins                  |
 | `ftp.response.code == 530`          | Show failed login attempts              |
 | `ftp.response.code == 550`          | Show file access denied errors          |
-```
+
 ### Data Transfer-Related
 
 FTP uses two channels:
 - **Control**: TCP port 21 (commands)
 - **Data**: Random port (file transfers)
-```
+
 | Filter                              | Purpose                                     |
 |-------------------------------------|---------------------------------------------|
 | `tcp.port == 21`                    | Show control channel traffic                |
@@ -146,7 +146,7 @@ FTP uses two channels:
 | `tcp.port == 20`                    | Active mode file transfer source port       |
 | `ftp.request.command == "STOR"`     | Show file upload attempts                   |
 | `ftp.request.command == "RETR"`     | Show file download attempts                 |
-```
+
 ---
 
 This analysis gives a clear picture of how brute-force attacks on FTP look in Wireshark. By focusing on login attempts, timing, and server responses, you can easily detect unauthorized access attempts and take the necessary steps for response and containment.

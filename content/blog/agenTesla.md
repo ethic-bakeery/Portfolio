@@ -269,7 +269,7 @@ From this, we can gather useful information:
 ### 🧱 PE Sections Overview
 
 A PE (Portable Executable) file (like `.exe` or `.dll`) is structured into sections — think of it like a **lunchbox** where each compartment has its role:
-```
+
 | Section Name | What's Inside                            | Simple Meaning                                  |
 |--------------|------------------------------------------|--------------------------------------------------|
 | `.text`      | Program code (machine instructions)       | 🧠 The brains of the program                     |
@@ -279,7 +279,7 @@ A PE (Portable Executable) file (like `.exe` or `.dll`) is structured into secti
 | `.reloc`     | Relocation data                           | 🛠 Helps the program load properly in memory    |
 | `.edata`     | Export table                              | 📤 Functions it exposes (if it's a DLL)         |
 | `.idata`     | Import table                              | 📥 Functions it calls from Windows libraries    |
-```
+
 Malware may:
 - Hide code in **unusual or custom-named sections**
 - Add **extra sections**, encrypt `.text`, or use **fake imports**

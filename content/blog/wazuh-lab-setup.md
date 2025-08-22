@@ -13,14 +13,13 @@ To install a Wazuh lab, certain requirements must be met as outlined on the offi
 
 ### Operating System
 The central components of Wazuh require a 64-bit Intel or AMD Linux processor (x86_64/AMD64 architecture). Wazuh officially supports the following operating systems:
-```
 | **Operating System**            | **Supported Versions**                              |
 |----------------------------------|----------------------------------------------------|
 | **Amazon Linux**                | 2, 2023                                            |
 | **CentOS**                      | 7, 8                                               |
 | **Red Hat Enterprise Linux**    | 7, 8, 9                                            |
 | **Ubuntu**                      | 16.04, 18.04, 20.04, 22.04, 24.04                  |
-```
+
 ### Installing Wazuh
 To perform a quick installation of Wazuh, you can use the Wazuh installation assistant. Execute the following command:
 
@@ -34,7 +33,7 @@ If the system does not meet the installation requirements, an error message will
 
 Once the installation is complete, the output will display access credentials and confirm a successful installation:
 
-```plaintext
+```bash
 INFO: --- Summary ---
 INFO: You can access the web interface https://<WAZUH_DASHBOARD_IP_ADDRESS>
     User: admin
@@ -76,7 +75,7 @@ The Wazuh agent is a lightweight software component installed on endpoints such 
 
 4. Copy the generated command. For example:
 
-   ```bash
+```bash
    wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.10.1-1_amd64.deb \
    && sudo WAZUH_MANAGER='192.168.10.5' WAZUH_AGENT_NAME='ubuntu-server' dpkg -i ./wazuh-agent_4.10.1-1_amd64.deb
    ```
@@ -85,7 +84,7 @@ The Wazuh agent is a lightweight software component installed on endpoints such 
 
 5. Once downloaded, configure the agent by editing the configuration file:
 
-   ```bash
+```bash
    sudo vim /var/ossec/etc/ossec.conf
    ```
 
@@ -95,7 +94,7 @@ The Wazuh agent is a lightweight software component installed on endpoints such 
 
 6. Save the file and run the following commands to enable and start the Wazuh agent:
 
-   ```bash
+```bash
    sudo systemctl daemon-reload
    sudo systemctl enable wazuh-agent
    sudo systemctl start wazuh-agent
@@ -103,7 +102,7 @@ The Wazuh agent is a lightweight software component installed on endpoints such 
 
 7. Verify the agent's status:
 
-   ```bash
+```bash
    sudo systemctl status wazuh-agent
    ```
 

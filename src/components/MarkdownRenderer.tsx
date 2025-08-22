@@ -4,7 +4,6 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-import 'highlight.js/styles/github-dark.css';
 
 interface MarkdownRendererProps {
     content: string;
@@ -25,14 +24,14 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
                                 <div className="absolute right-2 top-2 text-xs text-gray-400 uppercase">
                                     {match[1]}
                                 </div>
-                                <pre className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                                <pre className="bg-gray-900 rounded-lg p-4 overflow-x-auto text-white">
                                     <code className={className} {...props}>
                                         {children}
                                     </code>
                                 </pre>
                             </div>
                         ) : (
-                            <code className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono">
+                            <code className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-red-500">
                                 {children}
                             </code>
                         );
@@ -51,7 +50,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
                     th({ children }: any) {
                         return (
-                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 bg-gray-100 dark:bg-gray-800 font-semibold text-left">
+                            <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 bg-gray-100 dark:bg-gray-800 font-semibold text-left text-gray-700 dark:text-gray-300">
                                 {children}
                             </th>
                         );
@@ -59,7 +58,7 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
                     td({ children }: any) {
                         return (
-                            <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                            <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-gray-700 dark:text-gray-300">
                                 {children}
                             </td>
                         );

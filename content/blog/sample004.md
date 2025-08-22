@@ -84,7 +84,6 @@ Key findings from the headers:
   ![Decoded HTML](/blog-images/images/email/decode.PNG)
 
 ### Phishing Breakdown:
-```
 | Element         | Description |
 |----------------|-------------|
 | **Sender Name** | Appears to impersonate Livelo or Bradesco |
@@ -94,7 +93,7 @@ Key findings from the headers:
 | **Incentive** | Promises double points, miles, discounts |
 | **Action** | "REDEEM NOW" – links to phishing page |
 | **Result** | Likely credential theft |
-```
+
 ### 🚩 Red Flags:
 
 - Unusual sending server (`a.run.app`)

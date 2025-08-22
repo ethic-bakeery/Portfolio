@@ -74,7 +74,7 @@ First, we attempted to find the Last Known Good control set to gather shutdown t
 ### Step 4: Identifying the Last Control Set
 
 Using the `printkey` plugin:
-```plantext
+```bash
 vol.py -f Snapshot.vmem --profile=Win7SP1x64 printkey -K "Select"
 ```
 ![last good known](/blog-images/memory/lastcontrolset.PNG)
@@ -82,7 +82,7 @@ vol.py -f Snapshot.vmem --profile=Win7SP1x64 printkey -K "Select"
 We found that `CurrentControlSet` was set to 2.
 
 Then, we checked the `ControlSet002\Control\Windows` registry key:
-```plaintext
+```bash
 vol.py -f Snapshot.vmem --profile=Win7SP1x64 printkey -K "ControlSet002\\Control\\Windows"
 ```
 
@@ -97,7 +97,7 @@ We found the shutdown time recorded here.
 Volatility offers a plugin that simplifies shutdown time extraction.
 
 Command:
-```plaintext
+```bash
 vol.py -f Snapshot.vmem --profile=Win7SP1x64 shutdowntime
 ```
 
@@ -114,7 +114,7 @@ We now investigate what John was typing on his machine.
 The `consoles` plugin retrieves command-line inputs.
 
 Command:
-```plaintex
+```bash
 vol.py -f Snapshot.vmem --profile=Win7SP1x64 consoles
 ```
 

@@ -266,13 +266,12 @@ Persistence is a critical post-exploitation technique that allows attackers to m
 Attackers typically do not remain on a single compromised system. They move laterally through the network using tools like PsExec, PowerShell remoting, or RDP.
 
 Monitoring the following events can help detect such activity:
-```
+
 | **Event ID** | **Description**                                       | **Log Source** |
 |--------------|-------------------------------------------------------|----------------|
 | 5156         | Windows Filtering Platform allowed a connection       | Security       |
 | 4648         | Logon with explicit credentials                       | Security       |
 | 5140         | Shared object accessed                                | Security       |
-```
 These logs help trace the flow of traffic, credential usage, and access to shared resources across systems.
 
 ---

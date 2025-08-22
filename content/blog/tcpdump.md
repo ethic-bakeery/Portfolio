@@ -30,7 +30,7 @@ Here is a list of questions to guide you through the analysis process and help y
 
 ### Basic Capture Options
 Here is a table of common Tcpdump switches that allow us to customize our captures. These switches can be combined to adjust how the tool displays output in STDOUT and what is stored in the capture file. While this is not an exhaustive list, it covers the most frequently used and useful options.
-```bash
+
 | Parameter         | Explanation                                                       |
 |-------------------|-------------------------------------------------------------------|
 | `-i <interface>`   | Specifies the network interface to capture traffic from.         |
@@ -50,7 +50,7 @@ Here is a table of common Tcpdump switches that allow us to customize our captur
 | `-f <expression>`  | Applies a filter expression to capture only specific traffic.    |
 | `-e`               | Displays the link-layer header information.                      |
 | `-T <type>`        | Specifies the output format (e.g., `json`, `pcap`, etc.).         |
-```
+
 Before we begin, it's important to understand the structure of a pcap file.
 ![default capture](/blog-images/tcpdump/st1.PNG)
 
@@ -113,7 +113,7 @@ The following protocols and activities were observed during the packet capture:
 # Identifying Available Network Interfaces
 
 Before starting a capture with tcpdump, it's important to know the network interface names available on your system. You can achieve this by using the following command: `tcpdump -D` This command will list all the available network interfaces, showing their names and status. Here is an example output:
-```plaintext 
+```bash
 tcpdump -D
 1.enp0s3 [Up, Running, Connected]
 2.any (Pseudo-device that captures on all interfaces) [Up, Running]
@@ -129,7 +129,7 @@ The interfaces that are available and running are indicated by the `Running` key
 
 #### Host Filter
 We use a host filter with tcpdump in traffic analysis to capture packets specifically from or to a particular IP address, helping to focus on relevant traffic and reduce the amount of data being analyzed.
-```plaintext
+```bash
 sudo tcpdump -i enp0s3 host 192.168.10.4
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
@@ -145,7 +145,7 @@ We use the above command to capture traffic to and from the IP address `192.168.
 
 **Note: tcpdump resolves ip address by default, so in other to get the ip address and ports we use `-nn` parameter**
 #### default capture.
-```plaintext
+```bash
 tcpdump -c 1 -Xr capture.pcap tcp 
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:16:03.006812 IP ubuntu.49778 > 191.144.160.34.bc.googleusercontent.com.https: Flags [S], seq 1754762058, win 64240, options [mss 1460,sackOK,TS val 374620885 ecr 0,nop,wscale 7], length 0
@@ -156,7 +156,7 @@ reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262
 ```
 Note: i use `-c` to display only 1 packet  and `X` for Displaying the packet contents in both hex and ASCII format. Its worthy noting that the best practice is to combines the parameters with just a single dash 
  #### with `-nn` parameter 
- ```plaintext
+ ```bash
  tcpdump -c 1 -Xnnr capture.pcap tcp 
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:16:03.006812 IP 192.168.10.6.49778 > 34.160.144.191.443: Flags [S], seq 1754762058, win 64240, options [mss 1460,sackOK,TS val 374620885 ecr 0,nop,wscale 7], length 0
@@ -170,7 +170,7 @@ You see the host is not resolved here
 ## Filtering and Advanced Syntax Options
 Using advanced filtering options, as outlined below, allows us to limit the amount of traffic captured and outputted, reducing both disk space usage and buffer processing time. These filters, when combined with standard tcpdump syntax, help make data capture more efficient.
 ### **TCPDump Filters**
-```bash
+
 | **Filter** | **Result** |
 | --- | --- |
 | **host** | Filters traffic involving the designated host, bi-directional. |
@@ -183,13 +183,12 @@ Using advanced filtering options, as outlined below, allows us to limit the amou
 | **and / &&** | Combines two filters, such as filtering traffic from a specific source host *and* a specific port. |
 | **or** | Allows a match on either of two conditions; both do not need to be true. |
 | **not** | Excludes a specific filter condition; for example, `not UDP` will exclude UDP traffic. |
-```
 
 ### Source/Destination Filter
 The `src` and `dst` filters help narrow down traffic based on source and destination IP addresses. For example, in an incident where a host is contacting an external server, you can use these filters to isolate the traffic based on the source (the host) or the destination (the external server) to investigate the connection.
 lets say we want to filter `ssh` traffic that only originates from `192.168.10.4` host
 
-```plaintext
+```bash
 tcpdump -c 2 -Xnnr capture.pcap src 192.168.10.4 and port 22
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:19:36.012069 IP 192.168.10.4.22 > 192.168.10.6.45918: Flags [S.], seq 2051875392, ack 3766583352, win 65160, options [mss 1460,sackOK,TS val 2906562838 ecr 4023072618,nop,wscale 7], length 0
@@ -228,7 +227,7 @@ These operations help refine your capture to focus on relevant traffic, making a
 
 ### Using Destination in Combination with the Net Filter
 When analyzing traffic destined to a specific network, we can use the `net` keyword along with `CIDR` notation to capture all traffic within that network. For example, to capture all traffic destined for the `192.168.10.0/32` network, you can use the net filter. This is particularly useful in incident response when trying to determine how many hosts have been infected or have contacted a specific domain or `Command and Control` (C2) server
-```plaintext
+```bash
 tcpdump -c 3 -r capture.pcap dst net 192.168.10.0/24
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:15:51.863677 ARP, Request who-has 192.168.10.5 tell ubuntu, length 28
@@ -238,7 +237,7 @@ reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262
 The above command will help you identify all the nodes that the traffic is destined for. This filter can leverage both the common protocol name or the protocol number for any IP, IPv6, or Ethernet protocol. For instance, you can use `tcp[6]`, `udp[17]`, or `icmp[1]` to specify different protocols. We can take a look at this [resource](https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml) for a helpful list covering protocol numbers.
 
 #### UDP Traffic only 
-```plaintext
+```bash
  tcpdump -c 3 -r capture.pcap udp
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:16:02.991906 IP ubuntu.37689 > 172.16.116.14.domain: 15860+ [1au] A? content-signature-2.cdn.mozilla.net. (64)
@@ -246,7 +245,7 @@ reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262
 19:16:02.994957 IP 172.16.116.14.domain > ubuntu.37689: 15860 3/4/9 CNAME content-signature-chains.prod.autograph.services.mozaws.net., CNAME prod.content-signature-chains.prod.webservices.mozgcp.net., A 34.160.144.191 (521)
 ```
 #### TCP Traffic only 
-```plaintext
+```bash
 tcpdump -c 3 -nnr capture.pcap tcp
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:16:03.006812 IP 192.168.10.6.49778 > 34.160.144.191.443: Flags [S], seq 1754762058, win 64240, options [mss 1460,sackOK,TS val 374620885 ecr 0,nop,wscale 7], length 0
@@ -279,20 +278,20 @@ In tcpdump, we can filter traffic based on protocol numbers using the `proto` pa
 In certain situations, you may want to filter traffic based on a specific range of ports, especially when you're interested in well-known ports. Instead of displaying traffic for all ports, you can use the `portrange` parameter to focus on a particular range.
 
 - **Example**: To capture traffic within the port range `0-1024`, use the following command:  
-```plaintext
+```bash
   tcpdump -r capture.pcap portrange 0-1024
 ```
 Additionally, you can combine the portrange filter with the greater or less parameters to detect anomalies or infiltration attempts in your network. For example, if you're looking for large packets within well-known ports, you can filter traffic with a packet size greater than 1000 bytes in the 0-1024 port range:
 
 - **Example**: To capture packets larger than 1000 bytes within the port range 0-1024, use
-```plaintext 
+```bash
 tcpdump -r capture.pcap portrange 0-1024 and greater 1000
 ```
 This approach helps identify potential infiltrations by flagging unusually large packets on commonly used ports, which can be indicative of suspicious activity.
 
 ### Tips and Tricks
 if we look at how this command `tcpdump -c 4 -nnAr capture.pcap port 443` 
-```plaintext
+```bash
 tcpdump -c 4 -nnAr capture.pcap port 443
 reading from file capture.pcap, link-type EN10MB (Ethernet), snapshot length 262144
 19:16:03.006812 IP 192.168.10.6.49778 > 34.160.144.191.443: Flags [S], seq 1754762058, win 64240, options [mss 1460,sackOK,TS val 374620885 ecr 0,nop,wscale 7], length 0
