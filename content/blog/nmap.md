@@ -8,7 +8,14 @@ image: "/nmap/icon.png"
 
 # Deep Dive into Nmap Scanning Techniques
 
-Port scanning plays a crucial role in reconnaissance and penetration testing. Security professionals rely on different scanning techniques to identify open, closed, and filtered ports, as well as to understand the firewall behavior of a target system. Nmap offers a variety of scanning options, each with its own methodology, strengths, and stealth levels. In this post, we will break down several common Nmap scans, explain how they work, and show how they can be identified in captured network traffic (PCAP).
+From a defensive (blue team) perspective, understanding port scanning is critical for detecting and responding to potential intrusions. Attackers rely on scanning techniques to discover which services are running, which ports are open, and how firewalls respond. For defenders, recognizing the different scanning patterns in network traffic is essential for identifying reconnaissance activity early in the attack chain. 
+
+In this post, we will analyze several common Nmap scans, explain how they generate network traffic, and demonstrate how they can be identified within packet captures (PCAP). By studying these signatures, blue teams can improve their detection capabilities, tune intrusion detection systems (IDS), and strengthen network monitoring strategies against reconnaissance attempts.
+
+
+For demonstration purposes, the scans were performed in a GNS3 virtual lab environment consisting of one Kali Linux machine as the attacker, a switch, three PCs as targets, and a router managing connectivity. The following diagram shows the setup used:  
+
+![gns3 topology](/blog-images/nmap/gns3.PNG)
 
 ---
 
