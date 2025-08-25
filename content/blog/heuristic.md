@@ -107,6 +107,4 @@ Real-world example: in **NotPetya**, once inside a network, the malware spread r
 
 # Conclusion
 
-Heuristic techniques are not about catching malware by name, but by **catching it by behavior**. Whether it’s a strange file path, an unusual parent-child process chain, or suspicious network beaconing, these small clues can add up to a major incident detection.  
-
-By mastering these **100 heuristics**, analysts strengthen their ability to see beyond signatures and identify the subtle patterns attackers leave behind. In a world of evolving threats, heuristics remain one of the most powerful allies in the defender’s toolkit.
+Heuristic techniques are not about catching malware by name, but by **catching it by behavior**. Whether it’s a strange file path, an unusual parent-child process chain, or suspicious network beaconing, these small clues can add up to a major incident detection.In a world of evolving threats, heuristics remain one of the most powerful allies in the defender’s toolkit.
