@@ -15,7 +15,7 @@ In this post, we’ll go through **heuristic techniques** that every security an
 
 ---
 
-## 📂 Filesystem Heuristics
+## Filesystem Heuristics
 
 Attackers often drop or disguise files in unusual locations. Recognizing where files appear on disk, and how they are named, can be an immediate red flag.
 
@@ -29,7 +29,7 @@ Even subtler clues include executables hiding in browser cache folders, maliciou
 
 ---
 
-## ⚙️ Process & Execution Heuristics
+## Process & Execution Heuristics
 
 Malware rarely hides forever at some point, it executes. The way processes behave often reveals their true nature.  
 
@@ -45,7 +45,7 @@ Bottom line: when parent-child relationships look wrong or when binaries are run
 
 ---
 
-## 🌐 Network Heuristics
+## Network Heuristics
 
 On the wire, attackers leave trails too. Even when encrypted, the **shape** of the traffic often betrays them.  
 
@@ -59,7 +59,7 @@ Modern ransomware campaigns also love **long-lived TCP sessions with minimal dat
 
 ---
 
-## 🧠 Memory & Code Execution Heuristics
+## Memory & Code Execution Heuristics
 
 Malware often lives in memory to avoid detection on disk. Analysts can look for **unbacked executable memory regions**, **RWX (read-write-execute) memory pages**, or **high-entropy blobs** indicating packed shellcode.  
 
@@ -69,7 +69,7 @@ A famous case is **Mimikatz**, which directly interacts with LSASS memory to dum
 
 ---
 
-## 🗝️ Registry & Persistence Heuristics
+## Registry & Persistence Heuristics
 
 Persistence is the attacker’s way of ensuring they survive reboots. Registry keys are often the first target.  
 
@@ -81,7 +81,7 @@ From a heuristic standpoint, registry modifications occurring outside working ho
 
 ---
 
-## 📚 Code & Import Heuristics
+## Code & Import Heuristics
 
 When you look inside executables, the imported functions tell a story.  
 
@@ -93,7 +93,7 @@ A simple but real example: a fake installer statically linked with networking li
 
 ---
 
-## 👤 User & Behavior Heuristics
+## User & Behavior Heuristics
 
 Finally, attackers reveal themselves by how they interact with systems and users.  
 
