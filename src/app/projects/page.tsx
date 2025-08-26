@@ -25,6 +25,16 @@ const projects = [
     sourceCode: "https://github.com/ethic-bakeery/NURAwebapp",
   },
   {
+    title: "SOCer",
+    description:
+      "The SOCer is a Python-based SOAR-like automation solution designed for Security Operations Centers (SOC). It automates the enrichment of Indicators of Compromise (IOCs) by querying multiple Threat Intelligence (TI) sources, consolidating results, and applying risk scoring to accelerate investigations and reduce alert fatigue.",
+    image: "/projects/icon.PNG",
+    technologies: [
+      "Python3",
+    ],
+    sourceCode: "https://github.com/ethic-bakeery/SOCer-Toolkit/",
+  },
+  {
     title: "SecureAudit",
     description:
       "SecureAudit is a comprehensive Linux and Windows audit script designed for Ubuntu 20.04 LTS, based on the CIS Benchmark, to assess security configurations and compliance. It generates detailed audit reports in various formats and offers customizable checks to ensure system integrity and hardening",
@@ -156,8 +166,6 @@ export default function ProjectsPage() {
                       rel="noopener noreferrer"
                       className="group flex-1 inline-flex items-center justify-center space-x-2 rounded-md bg-primary/5 border border-border/50 px-4 py-2.5 text-sm font-medium text-foreground/80 transition-all hover:bg-primary hover:text-primary-foreground"
                     >
-                      <GlobeAltIcon className="h-4 w-4 text-primary/70 group-hover:text-primary-foreground" />
-                      <span>Live Demo</span>
                     </a>
                   </div>
                 </div>
