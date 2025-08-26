@@ -175,7 +175,7 @@ export default function ProjectsPage() {
 
           <motion.div variants={item} className="mt-12 text-center">
             <a
-              href="https://github.com/PeterDiyo"
+              href="https://github.com/ethic-bakeery"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center space-x-2 rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
