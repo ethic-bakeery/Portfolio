@@ -48,6 +48,20 @@ const projects = [
 
   },
   {
+    title: "Anomix",
+    description:
+      "Anomix is a CLI-based phishing email analysis tool that extracts and analyzes email components like headers, content, URLs, and attachments. It integrates threat intelligence sources and uses a risk-scoring system to assess email threats, generating reports in JSON, HTML, and PDF formats. The tool also supports machine learning to train custom phishing detection models.",
+    image: "/projects/srm-red.PNG",
+    technologies: [
+      "Machine Learning",
+      "Python",
+      "HTML/Jinja2",
+      "Threat Intel APIs"
+    ],
+    sourceCode: "https://github.com/ethic-bakeery/anomix",
+
+  },
+  {
     title: "PassSafe",
     description:
       "PassSafe is a straightforward Java password manager that securely stores and encrypts your passwords with a master key. It offers a simple, yet effective solution to safeguard your credentials.",
