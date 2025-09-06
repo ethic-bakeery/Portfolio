@@ -1,0 +1,44 @@
+Email Header Analysis Report
+Generated: 06/09/2025, 16:11:27
+
+=== GENERAL INFORMATION ===
+From: "Mary" <noreply@att.net>
+To: ruben@ruben.org
+Subject: #CRYPTO#
+Date: Sun, 23 Jul 2023 07:04:11 +0300
+
+=== ROUTING INFORMATION ===
+Message ID: <BCAAD0A3.7732363@att.net>
+Return Path: noreply@att.net
+
+=== EMAIL PATH (Received Headers) ===
+1. Server: MW6PR19MB8136.namprd19.prod.outlook.com
+   Time: Unknown
+   Raw: from MW6PR19MB8136.namprd19.prod.outlook.com (::1) by
+
+2. Server: DB7PR05CA0042.eurprd05.prod.outlook.com
+   Time: Unknown
+   Raw: from DB7PR05CA0042.eurprd05.prod.outlook.com (2603:10a6:10:2e::19)
+
+3. Server: DB8EUR06FT037.eop-eur06.prod.protection.outlook.com
+   Time: Unknown
+   Raw: from DB8EUR06FT037.eop-eur06.prod.protection.outlook.com
+
+4. Server: her.heritagejewelryandloan.com
+   Time: Unknown
+   Raw: from her.heritagejewelryandloan.com (192.232.233.127) by
+
+5. Server: [92.38.131.25]
+   Time: Unknown
+   Raw: from [92.38.131.25] (port=42212 helo=[127.0.0.1])
+
+=== AUTHENTICATION ===
+SPF: NhFVVbSpfy/JgvjmlMiTTPL8k2Tmkbl5evKlzM1LdEn3OUQeofIHn0vMs52DJxx5KUmeQJIMkTA=
+DKIM: DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+DMARC: header.d=heritagejewelryandloan.com;dmarc=none action=none
+
+=== SPAM ANALYSIS ===
+x-microsoft-antispam: X-Microsoft-Antispam: BCL:9;
+x-microsoft-antispam-mailbox-delivery: X-Microsoft-Antispam-Mailbox-Delivery:
+abwl: abwl:0;wl:0;pcwl:0;kl:0;dwl:0;dkl:0;rwl:0;ucf:0;jmr:0;ex:0;psp:0;auth:0;dest:J;OFR:SpamFilterAuthJ;ENG:(5062000305)(920221119067)(90000117)(920221120067)(90005022)(91005020)(91035115)(9050020)(9100338)(944500132)(2008001134)(2008121020)(4810010)(4910033)(8820095)(10005027)(9610025)(9540006)(10160021)(9320005)(9245025);RF:JunkEmail;
+x-microsoft-antispam-message-info: X-Microsoft-Antispam-Message-Info:
