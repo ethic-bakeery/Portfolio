@@ -18,6 +18,76 @@ In this write-up, let’s analyze a malicious email using [Anomix](https://githu
 
 This tool makes email analysis much easier by analyzing the email, comparing it with the model, enriching IOCs with TI, and finally generating a professional report for documentation.
 
+```python
+python3 anomix.py --help
+Usage: anomix.py [OPTIONS] COMMAND [ARGS]...
+
+  Anomix - Automated phishing investigation tool
+
+Options:
+  --version  Show the version and exit.
+  --help     Show this message and exit.
+
+Commands:
+  analyze    Analyze a single email file
+  configure  Configure API keys from YAML file
+  help       Display quick help reference
+  manual     Display comprehensive help manual
+  train      Train machine learning model on sample emails
+```
+The tool provide many options that we can use for analysis, incase if you want to see the full options you can use 
+```python
+ python3 anomix.py manual
+XLMMacroDeobfuscator: pywin32 is not installed (only is required if you want to use MS Excel)
+
+Anomix - Help Manual
+=============================================
+
+Anomix is a comprehensive CLI tool for analyzing emails for phishing indicators.
+It extracts artifacts, enriches with threat intelligence, and generates risk scores.
+
+COMMANDS
+-----------
+
+1. analyze [OPTIONS] EMAIL_FILE
+   Analyze a single email file for phishing indicators.
+
+   Options:
+     --output, -o PATH      Output directory for reports
+     --format, -f FORMAT    Output format: json, html, pdf, all (default: json)
+     --no-intel             Skip threat intelligence lookups
+     --verbose, -v          Verbose output with detailed analysis
+
+   Examples:
+     anomix.py analyze suspicious_email.eml
+     anomix.py analyze phishing.msg --output reports/ --format all --verbose
+     anomix.py analyze sample.eml --no-intel
+
+2. train [OPTIONS] SAMPLES_DIR
+   Train machine learning model on sample emails.
+
+   Options:
+     --output, -o PATH      Output path for trained model (default: models/phishing_model.pkl)
+
+   Examples:
+     anomix.py train samples/
+     anomix.py train samples/ --output models/my_model.pkl
+
+3. configure CONFIG_FILE
+   Configure API keys from YAML file.
+
+   Example:
+     anomix.py configure config/api_keys.yaml
+
+4. manual
+   Display this help manual.
+
+   Example:
+     anomix.py manual
+
+--------
+
+```
 ---
 
 ## Beginning the Analysis
@@ -61,10 +131,21 @@ The tool made several findings, shown in the following breakdown:
 | 6 | Threat Intel   | Malicious domain detected: **sefnet.net** (1 detection)                                      |
 | 7 | Threat Intel   | Malicious URL detected: `http://sefnet.net/track/o7436EVFfO5968877utQY8065Q...` (4 detections) |
 
-From this, we can already see the email is malicious. Let’s go through the report in more detail.
-
 ---
+Let's analyze the email **without threat intelligence** and observe the results.
 
+![No Intelligence Analysis](/blog-images/anomix/no.PNG)
+
+From the image above, we can see that **threat intelligence analysis has been excluded**. Instead, the tool simply analyzes the content of the email, compares it based on the trained model, and assigns a **risk score** based on its findings.
+
+### Notes:
+- The **risk scores** assigned to each finding are **fixed** by default. However, they **can be changed** by editing the source code.
+- Some **malicious keywords** are **hardcoded** into the tool. If you or your organization use similar keywords in normal email communication, you might encounter **false positives**.
+- To reduce false positives, you can **add or remove keywords** in the source code to better align the tool with your environment.
+
+> ⚙️ *Tip: Always review the static keyword list and adjust according to your operational context before deploying the tool in a production environment.*
+
+From this, we can already see the email is malicious. Let’s go through the report in more detail.
 ## Step 2: Email HTML Review
 
 When we view the HTML:  
