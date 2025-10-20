@@ -1,3 +1,7 @@
 User-agent: *
 Disallow:
+<<<<<<< HEAD
+=======
+
+>>>>>>> bc240a54dd100c0798b444d0e85d77af2ca3ca2c
 Sitemap: https://bakeery-portfolio.vercel.app/sitemap.xml
