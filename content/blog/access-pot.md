@@ -21,8 +21,6 @@ As mentioned above, it's a WordPress server, so we need to look for the web serv
 /var/log/apache2/
 ```
 
-![log](/blog-images/initial/log.PNG)
-
 So in that path, I see the `access.log` file which contains logs we should investigate.  
 **Note:** best practice don't always `cat` a log file if it's huge, your terminal might crash. 
 Let's check how many lines are there before diving in:
