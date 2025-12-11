@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   title: "Bakeery | Security Analyst",
   description:
     "Full-stack software engineer specializing in modern web and mobile app technologies",
+  verification: {
+    google: "xYSxjHrMIji_BHbfu7bgB9YHNM6k5b9_fMshKJA39rw",
+  },
 };
 
 export default function RootLayout({
