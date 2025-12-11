@@ -15,9 +15,6 @@ export const metadata: Metadata = {
   title: "Bakeery | Security Analyst",
   description:
     "Full-stack software engineer specializing in modern web and mobile app technologies",
-  verification: {
-    google: "xYSxjHrMIji_BHbfu7bgB9YHNM6k5b9_fMshKJA39rw",
-  },
 };
 
 export default function RootLayout({
@@ -26,15 +23,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google verification meta tag */}
+        {/* Google Search Console verification */}
         <meta
           name="google-site-verification"
-          content="xYSxjHrMIji_BHbfu7bgB9YHNM6k5b9_fMshKJA39rw"
+          content="o6B2r6My5YbTtR68qO39JCohna7QeihP3AgHGuPkU60"
         />
       </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
+          inter.variable,
+          firaCode.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}          "min-h-screen bg-background font-sans antialiased",
           inter.variable,
           firaCode.variable
         )}
