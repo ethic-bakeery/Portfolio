@@ -47,20 +47,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}          "min-h-screen bg-background font-sans antialiased",
-          inter.variable,
-          firaCode.variable
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
 }
