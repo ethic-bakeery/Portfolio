@@ -22,11 +22,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
+      <head>
+        {/* Google verification meta tag */}
+        <meta
+          name="google-site-verification"
+          content="xYSxjHrMIji_BHbfu7bgB9YHNM6k5b9_fMshKJA39rw"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
