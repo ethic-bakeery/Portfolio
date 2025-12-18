@@ -237,7 +237,7 @@ A reply of `ok` confirms the configuration was accepted.
 
 > **Note:** Ensure the **Commit** checkbox is selected under **RPC Options** so the configuration is applied.
 
-![commit](/blog-images/conf-int/okay.PNG)
+![commit](/blog-images/conf-int/ok.PNG)
 
 ---
 
