@@ -62,7 +62,9 @@ It's important to filter out internal IPs so you can focus on public IPs and how
 
 ![HTTP traffic](/blog-images/pcapm/http.PNG)
 
-We can see a bunch of GET requests. Let's narrow it down based on the conversation we're interested in. Something has been downloaded on host `172.16.0.149` let's see what it is by following the HTTP stream.
+We can see a bunch of GET requests. Let's narrow it down based on the conversation we're interested in.
+![HTTP traffic](/blog-images/pcapm/downloadp.PNG)
+Something has been downloaded on host `172.16.0.149` let's see what it is by following the HTTP stream.
 
 ![HTTP stream](/blog-images/pcapm/follows.PNG)
 
