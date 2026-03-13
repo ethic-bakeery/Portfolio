@@ -82,7 +82,7 @@ export default function AboutPage() {
                   I love breaking down complex threats, automating security tasks, and building security-focused software that empowers teams to act faster and smarter. Whether analyzing logs, developing detection rules, or building secure platforms, I take a proactive, research-driven approach.
                 </p>
                 <p>
-                  I’m currently pursuing my B.Tech in Computer Science and Engineering with a specialization in cybersecurity at SRM Institute of Science and Technology. I also hold a diploma in IT and have earned several industry certifications in SOC operations, red teaming, and defensive analysis.
+                  I’m currently pursuing my B.Tech in Computer Science and Engineering with a specialization in cybersecurity at SRM Institute of Science and Technology. I also hold a diploma in IT and possess expertise in SOC operations, red teaming, and defensive analysis.
                 </p>
               </motion.div>
             </div>
