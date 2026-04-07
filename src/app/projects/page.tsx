@@ -12,6 +12,17 @@ import Navbar from "@/components/Navbar";
 
 const projects = [
   {
+  title: "BFX",
+  description:
+    "A CLI-based forensic tool that extracts Chromium browser artifacts, automates timestamp conversion and MD5 hashing, and streamlines evidence triage through a searchable interface.",
+  image: "/projects/bfx.PNG",
+  technologies: [
+    "Python3",
+    "SQLite",
+  ],
+  sourceCode: "https://github.com/ethic-bakeery/bfx/",
+},
+  {
     title: "NURA Connect",
     description:
       " NURA Connect is a civic tech platform that empowers Nigerian youth by facilitating nationwide collaboration, civic education, and justice-driven action. It offers member registration, event management, secure messaging, and real-time updates to drive change across the nation.",
