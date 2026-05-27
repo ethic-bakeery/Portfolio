@@ -1,6 +1,6 @@
 ---
 title: "Incident Response on a Compromised Windows Workstation Using LimaCharlie EDR"
-date: 2025-05-20
+date: 2026-05-20
 description: "A full incident response walkthrough from initial alert triage on LimaCharlie EDR to memory acquisition, log correlation, and attack timeline reconstruction on a compromised Windows workstation."
 image: /lime/dashbaord.PNG
 category: "Incident Response"
