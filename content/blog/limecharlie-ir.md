@@ -10,7 +10,7 @@ category: "Incident Response"
 
 Every incident response starts the same way — something fires on your dashboard and you have to decide: is this real, or is it noise? That split-second judgment call is what separates a good analyst from someone who either panics or ignores everything.
 
-This write-up walks through a full IR engagement on a compromised Windows workstation. I used **LimaCharlie EDR** as my primary visibility tool, supplemented by manually collected Windows Event Logs and a PowerShell correlation script I wrote to automate the tedious parts. By the end, we had a complete attack timeline: initial access, credential theft, persistence, and C2 communication — all reconstructed from logs and memory.
+This write-up walks through a full IR engagement on a compromised Windows workstation. I used **LimaCharlie EDR** as my primary visibility tool, supplemented by manually collected Windows Event Logs and a PowerShell correlation script I wrote to automate the tedious parts. By the end, we had a complete attack timeline: initial access, credential theft, persistence, and C2 communication all reconstructed from logs and memory.
 
 ---
 
@@ -24,13 +24,13 @@ The first thing I opened was the LimaCharlie dashboard. Three alerts were starin
 - `SCHEDULED_TASK_PERSISTENCE` — triggered **8 times**
 - `Mimikatz credential dumping detected` on `desktop-vphn9j8.srmist.edu.in` — triggered **1 time**
 
-In real-world IR, your first job is **triage, not response**. You do not pull the plug on a machine the moment you see an alert — you need to determine if these are true positives before you touch anything. Rushed response destroys forensic evidence.
+In real-world IR, your first job is **triage, not response**. You do not pull the plug on a machine the moment you see an alert  you need to determine if these are true positives before you touch anything. Rushed response destroys forensic evidence.
 
 **Real-world tip:** Always filter by time range and specific workstation before you start digging. Working without a time filter in a production environment is like searching for a needle in a haystack while someone keeps throwing in more hay.
 
 ---
 
-## Phase 2 — Scoping the Workstation
+## Phase 2: Scoping the Workstation
 
 I navigated to the **Sensors** section and identified the workstation in question.
 
@@ -44,7 +44,7 @@ LimaCharlie is genuinely powerful here. From a single pane, you get network conn
 
 ---
 
-## Phase 3 — When Did This Start?
+## Phase 3: When Did This Start?
 
 Before jumping into detections, I needed an anchor date. I went into the **Analytics** section to find when the activity first sparked.
 
@@ -58,7 +58,7 @@ Activity started on **May 11, 2025**. That's my left boundary. I now had a defin
 
 ## Phase 4 — Confirming the Alerts
 
-### PowerShell Execution — True Positive
+### PowerShell Execution True Positive
 
 I filtered the Detections section for `SUSPICIOUS_POWERSHELL_EXECUTION` within the confirmed time range.
 
@@ -111,7 +111,7 @@ No ambiguity. The workstation is compromised. Time to shift from triage into ful
 
 ---
 
-## Phase 5 — Network and Process Analysis
+## Phase 5 Network and Process Analysis
 
 Before isolating the machine, I did a quick pass through LimaCharlie's live network and process views to understand the current state of the compromise.
 
@@ -133,9 +133,9 @@ This meant the attacker had remote management access to the box, not just a beac
 
 ### Process Tree
 
-![Process Tree](/blog-images/lime/wm.PNG)
+![Process Tree](/blog-images/lime/alsoprocess.PNG)
 
-The process view confirmed the chain: PowerShell spawned the beacon, and the beacon spawned another PowerShell — a reverse shell back to the attacker's C2. This is how the attacker was running commands interactively on the compromised host.
+The process view confirmed the chain: PowerShell spawned the beacon, and the beacon spawned another PowerShell a reverse shell back to the attacker's C2. This is how the attacker was running commands interactively on the compromised host.
 
 ### Rogue User Account
 
@@ -145,7 +145,7 @@ A new local user account named `evil` had been created but never used. This is a
 
 ---
 
-## Phase 6 — Memory Acquisition
+## Phase 6 Memory Acquisition
 
 With the picture clear enough to act, I isolated the network and took a memory dump before shutting anything down.
 
@@ -155,7 +155,7 @@ In LimaCharlie, this is done through **Extensions → Artifact Acquisition**. Yo
 
 Once the dump completed, I confirmed it appeared in the artifacts section.
 
-![Memory Artifact](/blog-images/lime/artifact.PNG)
+![Memory Artifact](/blog-images/lime/artfact.PNG)
 
 **Real-world tip:** Always capture memory before network isolation if possible. Live memory contains active encryption keys, credentials in plaintext, injected shellcode, and network socket states that disappear the moment the machine loses connectivity or is shut down. Memory is the most volatile evidence you have.
 
@@ -167,7 +167,7 @@ So I collected logs manually from the compromised machine via PowerShell: **Secu
 
 ---
 
-## Phase 7 — Defining the Forensic Questions
+## Phase 7 Defining the Forensic Questions
 
 Before touching a single log, I wrote down the questions I needed to answer. This is the step that most people skip, and it's the step that makes investigations fall apart.
 
@@ -182,21 +182,21 @@ DID they move laterally?
 WHAT data was impacted?
 ```
 
-We are building an **attack timeline** — not hunting random events. Every query, every filter, every pivot has to serve that goal.
+We are building an **attack timeline** not hunting random events. Every query, every filter, every pivot has to serve that goal.
 
 The working theory based on EDR evidence: the attacker gained initial access via **WinRM** and established persistence on the host. What they did in between is what the logs needed to prove.
 
 ---
 
-## Phase 8 — Log Analysis: Reconstructing the Attack
+## Phase 8 Log Analysis: Reconstructing the Attack
 
-### Step 1 — Confirming Authentication (Event ID 4624)
+### Step 1 Confirming Authentication (Event ID 4624)
 
 I started with successful logon events (4624) — the baseline of "who got in."
 
 ![4624 Logon Events](/blog-images/lime/4624.PNG)
 
-Filtering by **Logon Type 3** (network logon) immediately surfaced the attacker's source IP: `10.3.151.75` — the same IP we had already flagged in the EDR network tab. Cross-source confirmation. No failed logon attempts from that IP either, which tells us this was not a brute force — the attacker had valid credentials.
+Filtering by **Logon Type 3** (network logon) immediately surfaced the attacker's source IP: `10.3.151.75` the same IP we had already flagged in the EDR network tab. Cross-source confirmation. No failed logon attempts from that IP either, which tells us this was not a brute force the attacker had valid credentials.
 
 Key fields to capture from every suspicious 4624:
 
@@ -211,13 +211,13 @@ Key fields to capture from every suspicious 4624:
 
 ---
 
-### Step 2 — Process Execution Reconstruction (Event ID 4688)
+### Step 2 Process Execution Reconstruction (Event ID 4688)
 
 With the logon session ID from 4624 in hand, I pivoted to process creation events (4688). The **LogonId** field in 4688 maps directly to the **TargetLogonId** in 4624 — this is how you connect "who logged in" to "what they ran."
 
 ![WMIC Process Creation](/blog-images/lime/wmic.PNG)
 
-The first correlation showed `wsmprovhost.exe` (the WinRM host process) being spawned by `svchost.exe` — confirming WinRM as the initial access vector. The session integrity label `S-1-16-16384` (System Integrity) confirmed it was running with elevated privileges.
+The first correlation showed `wsmprovhost.exe` (the WinRM host process) being spawned by `svchost.exe` confirming WinRM as the initial access vector. The session integrity label `S-1-16-16384` (System Integrity) confirmed it was running with elevated privileges.
 
 ![4624 to 4688 Correlation](/blog-images/lime/corr4624.PNG)
 
@@ -239,7 +239,7 @@ Disabling legitimate accounts removes recovery options for defenders and reduces
 
 ---
 
-### Step 3 — Automating the Correlation
+### Step 3 Automating the Correlation
 
 Manually copying LogonIds between 4624 and 4688 events gets old very fast. I wrote a PowerShell script to automate the full correlation and export the results to CSV:
 
@@ -308,7 +308,6 @@ $Parsed4688 = foreach ($event in $ProcessEvents) {
     }
 }
 
-# STEP 3 — BUILD LOGON INDEX AND CORRELATE
 Write-Host "[+] Correlating processes to logon sessions..." -ForegroundColor Cyan
 
 $LogonIndex = @{}
@@ -338,15 +337,12 @@ $Results = foreach ($p in $Parsed4688) {
 
 $Results = $Results | Sort-Object ProcessTime
 
-# OUTPUT AND EXPORT
 $Results | Format-Table LogonID, User, LogonType, SourceIP, ProcessTime, Process, CommandLine, Parent -AutoSize -Wrap
 
 $OutFile = Join-Path $LogPath "CORRELATED_4624_4688_FIXED.csv"
 $Results | Export-Csv -NoTypeInformation -Encoding UTF8 $OutFile
 Write-Host "`n[+] Exported to: $OutFile" -ForegroundColor Green
 
-# SUSPICIOUS PROCESS FILTER
-Write-Host "`n================ SUSPICIOUS EXECUTION ================" -ForegroundColor Magenta
 $Results | Where-Object {
     $_.Process -match "powershell|cmd|wmic|rundll32|mshta|certutil|bitsadmin|wscript|cscript|psexec|mimikatz|wmiprvse"
 } | Format-Table LogonID, User, SourceIP, Process, CommandLine, Parent -AutoSize -Wrap
@@ -358,11 +354,11 @@ The output CSV gave me a clean, sortable attack timeline:
 
 ---
 
-### Step 4 — Reading the Timeline
+### Step 4 Reading the Timeline
 
 Filtering the CSV by **Logon Type 3** (remote network connections) showed exactly what the attacker did after each login session:
 
-**First session (May 11):** PowerShell executed `enum_lab.ps1` immediately — a local enumeration script to map out the system. Standard first move after gaining access.
+**First session (May 11):** PowerShell executed `enum_lab.ps1` immediately a local enumeration script to map out the system. Standard first move after gaining access.
 
 **Memory dump activity:**
 
@@ -409,18 +405,18 @@ Based on the full investigation, here is what actually happened:
 | Time | Action |
 |---|---|
 | May 11, ~06:04 | Attacker authenticates via WinRM (Logon Type 3) using valid credentials |
-| May 11, ~06:05 | `enum_lab.ps1` executed — host enumeration begins |
+| May 11, ~06:05 | `enum_lab.ps1` executed host enumeration begins |
 | May 11 | Offensive tools downloaded from GitHub via PowerShell web cradles |
-| May 11 | Invoke-Mimikatz executed against LSASS — credential theft |
-| May 11 | SharpHound executed — AD topology mapping |
-| May 11 | PowerUp.ps1 executed — privilege escalation path analysis |
+| May 11 | Invoke-Mimikatz executed against LSASS credential theft |
+| May 11 | SharpHound executed AD topology mapping |
+| May 11 | PowerUp.ps1 executed privilege escalation path analysis |
 | May 12 | Scheduled task persistence mechanisms tested with various triggers |
 | May 18, ~06:14 | New remote session initiated |
-| May 18, ~06:15 | `whoami.exe` executed — user context confirmation |
-| May 18 | User `john` account disabled — removing recovery access for defenders |
+| May 18, ~06:15 | `whoami.exe` executed user context confirmation |
+| May 18 | User `john` account disabled removing recovery access for defenders |
 | May 18 | `beacon.exe` deployed from Downloads directory |
-| May 18 | Scheduled task `"Windows Services and Tasks"` created — beacon re-executes every 5 minutes |
-| May 18 | Local user `evil` created — backdoor account for future access |
+| May 18 | Scheduled task `"Windows Services and Tasks"` created beacon re-executes every 5 minutes |
+| May 18 | Local user `evil` created backdoor account for future access |
 
 ---
 
