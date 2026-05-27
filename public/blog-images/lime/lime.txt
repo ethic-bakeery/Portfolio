@@ -1,0 +1,332 @@
+![/blog-images/lime/dashbaord.PNG]
+On Dashboard the follwoing alerts are noticed:
+
+-> SUSPICIOUS_POWERSHELL_EXECUTION executed 13 times
+-> SCHEDULED_TASK_PERSISTENCE executed 8 times
+-> Mimikatz credential dumping detected on desktop-vphn9j8.srmist.edu.in executed 1 time
+
+what to do next is to investiage these alerts deeply to find whether thehy false positive or negative,
+lets begin by digging into the workstation. 
+click on sensors and select the list of sensors and click on ypor workstation icon, mine is windows and we can see i hve two workstations, noth online, we will be investigating the second one
+![/blog-images/lime/sensors.PNG]
+since am on limecharlie EDR, it gives so many features and functionality to dive deeper into the work stations, it provide these features
+![/blog-images/lime/sensorinfo.PNG]
+the above image show us all the details of our info and we can see all the functionalities and features offer by limecharlie on what we can look up and info we can collect from our workstation. lets begin the analysis as an incident responder.
+The first stage is to access those alerts and confirm whether they are true positive or just noise from there we can know what to do next: provided we have a SIEM we will query the logs and look at what executed who executed and when it was executed but since we are on EDR only lime charlie already provided a timeline that shows the activities that was executed, command lines and paths so lets have  alook. since we will be checking a timetline we would like to know when this activities atrted so wecn check the analytic section in limecahrlie
+![/blog-images/lime/analytic.PNG]
+this shows us when the activity started and the spark, we can see it started on 11th of may 2025. so since we notice when the even spark and get the actual date that will help us narrow down our investigation, we wont be checking from what happened 3 months ago we focus on only these.we have the date lets go to timeline section.  so now lets begin confirming the alerts, from our left handside we go to detection sections and see whats detected, it gives us a fuill details of whats detected, we use our time range option and filter the detection within that time frame, Note: time frame filter is very important always filter base on time range to avoid getting lose in previous or unlrelavnt information, also fileter base on the worjkstation, that will help us narrow down the search and focus only on whats important
+![/blog-images/lime/detection.PNG]
+so we see the list of all the detections lets begin by filtering the "SUSPICIOUS_POWERSHELL_EXECUTION" which has 3 detections alert
+![/blog-images/lime/filterper01.PNG]
+these are the SUSPICIOUS_POWERSHELL_EXECUTION alerts detected by our EDR,lets look at them, we can see several powershells commands are executed
+![/blog-images/lime/filterper01.PNG]
+The first command shows a file is donwloaded via github which turns out to be a powershell file
+![/blog-images/lime/filterper02.PNG]
+![/blog-images/lime/filterper03.PNG]
+This log flter show us an active post exploitation attack chain on the host desktop-vphn9j8.srmist.edu.in where  the attacker executed offensive techniques via interactive PowerShell processes. The activity began with aggressive credential access and discovery actions, utilizing in-memory web download cradles to execute Invoke-Mimikatz for LSASS memory dumping alongside SharpHound to map Active Directory attack paths for subsequent lateral movement. The operator then pivoted to local privilege escalation profiling by pulling down PowerUp.ps1 to parse the system for misconfigured services and unquoted paths. To establish an administrative foothold while evading defensive controls, the execution sequence leveraged obfuscated Base64-encoded command lines, hijacked the Windows registry for persistence, and hid payload components within NTFS Alternate Data Streams to bypass standard file integrity monitoring. Because these fileless execution patterns occurred sequentially within a tight window under the local Acer user context, it represents a highly concentrated attempt to compromise local accounts, discover network topology, and establish stealthy persistence.
+which shows and prove that the powershell execution is legit, we can confirm the rest and immediately and start the digital forensic inveatigation
+
+
+
+now filtering the schedule task, 
+![/blog-images/lime/filtersch01.PNG]
+![/blog-images/lime/filtersch02.PNG]
+we can see several schedule task has been added which are schedule to do smething in the future, 
+
+These event logs shows testing and configuring multiple Windows Scheduled Tasks (schtasks.exe)  which was  to establish local persistence and bypass system security controls.
+
+
+
+The most critical event occurred on May 18, where an active Command and Control (C2) binary named beacon.exe, running out of the user's Downloads directory, directly spawned a scheduled task called "Windows Services and Tasks." This task was configured with a critical operational cadence to re-execute the backdoor binary every 5 minutes, ensuring the operator maintains an uninterrupted connection to the compromised host. The earlier events from May 12 focus on evaluating specific execution triggers and exploiting local system binaries. The operator tested immediate tasks running as a specific domain user, tasks executing automatically at system startup under full SYSTEM privileges, and tasks configured to trigger exactly upon user logon. Furthermore, the logs reveal advanced evasion mechanics designed to subvert user account controls
+
+ Mimikatz credential.
+and the last one we can see is  Mimikatz credential 
+![/blog-images/lime/mim.PNG]
+this give us enough reason that the workstation is comrpomise now lets begin the real investigation on how these attack onfold 
+
+now we have, we have isolated our netwok but before then lets look at our limecharlie if we disconnect we can see the details, but in real network we must immediae;ly isolate the wokrstation and lets take the memory and and important logs to see what actually going on on the workstation, but before that we can take a quick look through limerachrlie navigations setcions to see what is running to have a quick overview 
+lets begin with the network sections 
+
+looking at the ntworjk sections we can see that , we can see some timeouts an dalso the beacon process connection fully established and recieig connection, which is the C2 of the atatcker
+![/blog-images/lime/beaconnet.PNG]
+and which we saw previolsuly that its the same beacon that was added to schedule ask therefoe it was added as a persistence and connect to our network every few minutes
+we can also see the hos waiting for other connections, and the port 5985 looks like another remote access, we have a look at it deeper. now we know that the attacker uploaded an implant which he made a s a persistence via schedule task tha connects to him after every few minutes. but how did he get access to theowrk station? lets dig deeper
+![/blog-images/lime/s.PNG]
+looking at the process section we can see thebeacon was pawned by and powershell and it also pawned a powershell console meaning it initianed reverse shell o the attackers C2
+![/blog-images/lime/wm.PNG]
+and right below we we can see wsmprovhost.exe(Web Services Management Provider Hos) process which tell us that an initail remote access was established and we can see its acer user process  nd from our network tab we can se waitng connection on port 5985(HTTP)
+a simple google tell us that 
+![/blog-images/lime/qu.PNG]
+
+looking at the users shows that a new user was created call evil, which was never been used
+![/blog-images/lime/user.PNG]
+now we will go ahead and take the memory, by goin g the extension -> extension name which is dumper  and select the target which in our case is emory and also set the sid of the host, by default the retention is 30 days. and click request dump
+![/blog-images/lime/takemem.PNG]
+and finally we go to artfact under our sesnor, we can see the memory is aquired
+![/blog-images/lime/artifact.PNG]
+we can collect logs through the limecharlie but thesefeature is paid ands ma on a free version
+![/blog-images/lime/paid.PNG]
+i collected the logs manually from the compromise machine powershell. i collected the folowing logs, security, powershell, sysmon, system and applications, in real world we should colloct more logs than this for better vsisiblibliy such as evidence of access logs and evidence of execution logs, we will cover this in naother write up.
+
+before we begin analyzeing the logs we should know what we are looking for from what time frame to what tme framw, and also we should fomulate our questions so that we have a clear guidance on what we are going to do.
+our nowjob is to reconstruct:
+
+WHO
+→ got access
+→ HOW
+→ WHEN
+→ WHAT they executed
+→ WHAT they touched
+→ HOW they persisted
+→ WHETHER they moved laterally
+→ WHAT data was impacted
+
+we are building an attack timeline. Not hunting random events.
+ the attacker, gain access via a WinRM and manage to create a peristence on the hosts, what he has done is what we dont know. we will find out via oue logs. lets define the forensic questions.
+since we have already onfirmed malicious activity, we need to confirm How did attacker authenticate?
+
+lets start by Collect These Security Events, lets check the sucessful logons using 4624 event ID. and we can see there are 90 sucessful logins
+![/blog-images/lime/4624.PNG]
+i filtered base on the logon type visible in the log is only 2 and 3  and the event ID which the second event show us the remote ip address 10.3.151.75 which the attacker ip that we see on the EDR. we can note down the account name and other infomation, lets check if there is any failed login attempts and logon. there is no failed login attempt from the network.
+we have to take down the following fields 
+| Field                     | Why                 |
+| ------------------------- | ------------------- |
+| TargetUserName            | compromised account |
+| TargetLogonId             | session correlation |
+| IpAddress                 | source              |
+| WorkstationName           | origin              |
+| LogonType                 | access method       |
+| AuthenticationPackageName | NTLM/Kerberos       |
+| ProcessName               | auth initiator      |
+
+in my logs not all the fields are availabe, so its important to take note of them. Once suspicious logon found TargetLogonId we can use it for correlaion. now lets RECONSTRUCT PROCESS EXECUTION, lets filter 
+the 4688 which is Process Creation which will give us the details of process that created and the parent and child process with the command line run. this give us a good details of what was started and executed
+tme correlation matters alot in log analysis, in the above picture we see the attacker login on 11/5/2026 at 6:04 and here in our process creation on the same day. there is time mimtach between my vm and the windows workstation so we can actually correlated the time effectively. but note in a highly good infrstuarcture this matters alot.
+![/blog-images/lime/wmic.PNG]
+so whats hap[ening here is,  we see wmic.exe pawning conhost.exe as we know wmic is a remote logging process which is use fr remote access which we saw previosuly on the EDR, in addition we can see the Mandatory Label:		S-1-16-16384 which means its executd with level on integrity 
+also we can see the login 	Logon ID:0x515b794 in the 4624 log appears in the 4688 where a logon was initiated and the \wsmprovhost.exe process was created by svchost.exe and initiated the first session
+
+![/blog-images/lime/corr4624.PNG]
+and the process created 
+![/blog-images/lime/corr-4624.PNG]
+also this	Logon ID:		0x4e4cb0b from logon session whn i copy it and search it in the 4688 it appears in our process/service creation logs, loo at the time he logins at 6:14 on 5/18/2026
+![/blog-images/lime/logon2.PNG]
+and below we can see a whomai.exe is executed at 6:15 on 5/18/2026 which shows he started gathering infomation about the current logon user
+![/blog-images/lime/logon2-4688.PNG]
+
+Note that timeline is crucial and correlation of events and IDs is very important as i show who id that and when it was done. it also appear that the user has find a john account and disable it
+![/blog-images/lime/deactivate.PNG]
+in the 8 events above shows thet the attacker after login did some information gathering and disable a user call john 
+so from our correlation we can identify alot of command and activity taht athe attacker executed on the compomise workstation, so copying the logon ID from 4624 and searching the sme within 4688 to identify what was executed after what login by which user is time consuming thats where an automation comes we can automate the correlation so i made this script.
+```powershell
+
+# =========================================================
+# FULL 4624 ↔ 4688 LOGON + PROCESS CORRELATION
+# OFFLINE EVTX DFIR ANALYSIS
+# =========================================================
+
+$LogPath = "C:\Users\cryfo\OneDrive\Documents\Desktop\logs"
+$SecurityLog = Join-Path $LogPath "Security.evtx"
+
+$StartDate = Get-Date "2026-05-11 00:00:00"
+$EndDate   = Get-Date "2026-05-20 23:59:59"
+
+Write-Host "`n[+] Loading Security.evtx..." -ForegroundColor Cyan
+
+# =========================================================
+# STEP 1 — EXTRACT 4624 LOGON EVENTS
+# =========================================================
+
+Write-Host "[+] Parsing 4624 logon events..." -ForegroundColor Yellow
+
+$LogonEvents = Get-WinEvent -Path $SecurityLog | Where-Object {
+    $_.Id -eq 4624 -and
+    $_.TimeCreated -ge $StartDate -and
+    $_.TimeCreated -le $EndDate
+}
+
+$Parsed4624 = foreach ($event in $LogonEvents) {
+
+    $xml = [xml]$event.ToXml()
+
+    $data = @{}
+    foreach ($d in $xml.Event.EventData.Data) {
+        $data[$d.Name] = $d.'#text'
+    }
+
+    [PSCustomObject]@{
+        TimeCreated = $event.TimeCreated
+        LogonID     = $data.TargetLogonId
+        User        = $data.TargetUserName
+        Domain      = $data.TargetDomainName
+        LogonType   = $data.LogonType
+        IPAddress   = $data.IpAddress
+    }
+}
+
+# =========================================================
+# STEP 2 — EXTRACT 4688 PROCESS CREATION EVENTS
+# =========================================================
+
+Write-Host "[+] Parsing 4688 process creation events..." -ForegroundColor Yellow
+
+$ProcessEvents = Get-WinEvent -Path $SecurityLog | Where-Object {
+    $_.Id -eq 4688 -and
+    $_.TimeCreated -ge $StartDate -and
+    $_.TimeCreated -le $EndDate
+}
+
+$Parsed4688 = foreach ($event in $ProcessEvents) {
+
+    $xml = [xml]$event.ToXml()
+
+    $data = @{}
+    foreach ($d in $xml.Event.EventData.Data) {
+        $data[$d.Name] = $d.'#text'
+    }
+
+    [PSCustomObject]@{
+        TimeCreated    = $event.TimeCreated
+
+        # CORRELATION FIELD
+        LogonID        = $data.SubjectLogonId
+
+        User           = $data.SubjectUserName
+        Domain         = $data.SubjectDomainName
+
+        # PROCESS INFO
+        NewProcessName = $data.NewProcessName
+        CommandLine    = $data.CommandLine
+        ParentProcess  = $data.CreatorProcessName
+        PID            = $data.NewProcessId
+        ParentPID      = $data.ProcessId
+    }
+}
+
+# =========================================================
+# STEP 3 — BUILD LOGON INDEX (4624)
+# =========================================================
+
+Write-Host "[+] Building logon session index..." -ForegroundColor Cyan
+
+$LogonIndex = @{}
+
+foreach ($l in $Parsed4624) {
+
+    if ($l.LogonID -and -not $LogonIndex.ContainsKey($l.LogonID)) {
+
+        $LogonIndex[$l.LogonID] = $l
+    }
+}
+
+# =========================================================
+# STEP 4 — CORRELATE SESSIONS
+# =========================================================
+
+Write-Host "[+] Correlating processes to logon sessions..." -ForegroundColor Cyan
+
+$Results = foreach ($p in $Parsed4688) {
+
+    if ($p.LogonID -and $LogonIndex.ContainsKey($p.LogonID)) {
+
+        $l = $LogonIndex[$p.LogonID]
+
+        [PSCustomObject]@{
+
+            # LOGON INFO
+            LogonTime   = $l.TimeCreated
+            LogonID     = $l.LogonID
+            User        = "$($l.Domain)\$($l.User)"
+            LogonType   = $l.LogonType
+            SourceIP    = $l.IPAddress
+
+            # PROCESS INFO
+            ProcessTime = $p.TimeCreated
+            Process     = $p.NewProcessName
+            CommandLine = $p.CommandLine
+            Parent      = $p.ParentProcess
+            PID         = $p.PID
+        }
+    }
+}
+
+# =========================================================
+# STEP 5 — SORT TIMELINE
+# =========================================================
+
+$Results = $Results | Sort-Object ProcessTime
+
+# =========================================================
+# STEP 6 — OUTPUT RESULTS
+# =========================================================
+
+Write-Host "`n================ ATTACK TIMELINE ================" -ForegroundColor Red
+
+$Results |
+Format-Table `
+    LogonID,
+    User,
+    LogonType,
+    SourceIP,
+    ProcessTime,
+    Process,
+    CommandLine,
+    Parent `
+    -AutoSize -Wrap
+
+# =========================================================
+# STEP 7 — EXPORT CSV
+# =========================================================
+
+$OutFile = Join-Path $LogPath "CORRELATED_4624_4688_FIXED.csv"
+
+$Results |
+Export-Csv -NoTypeInformation -Encoding UTF8 $OutFile
+
+Write-Host "`n[+] Exported to:" -ForegroundColor Green
+Write-Host $OutFile
+
+# =========================================================
+# STEP 8 — SUSPICIOUS PROCESS FILTER
+# =========================================================
+
+Write-Host "`n================ SUSPICIOUS EXECUTION ================" -ForegroundColor Magenta
+
+$Suspicious = $Results | Where-Object {
+    $_.Process -match "powershell|cmd|wmic|rundll32|mshta|certutil|bitsadmin|wscript|cscript|psexec|mimikatz|wmiprvse"
+}
+
+$Suspicious |
+Format-Table `
+    LogonID,
+    User,
+    SourceIP,
+    Process,
+    CommandLine,
+    Parent `
+    -AutoSize -Wrap
+``
+
+
+![/blog-images/lime/correlation.PNG]
+
+
+
+
+
+normal
+explorer.exe
+   └── cmd.exe
+         └── wmic.exe
+               └── conhost.exe
+-
+
+
+malicious
+winword.exe
+    └── powershell.exe
+          └── wmic.exe
+                └── conhost.exe
+
+
+tasklist /svc /fi "PID eq 3876"
