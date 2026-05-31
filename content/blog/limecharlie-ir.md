@@ -8,13 +8,13 @@ category: "Incident Response"
 
 ## Setting the Scene
 
-Every incident response starts the same way — something fires on your dashboard and you have to decide: is this real, or is it noise? That split-second judgment call is what separates a good analyst from someone who either panics or ignores everything.
+Every incident response starts the same way something fires on your dashboard and you have to decide: is this real, or is it noise? That split-second judgment call is what separates a good analyst from someone who either panics or ignores everything.
 
 This write-up walks through a full IR engagement on a compromised Windows workstation. I used **LimaCharlie EDR** as my primary visibility tool, supplemented by manually collected Windows Event Logs and a PowerShell correlation script I wrote to automate the tedious parts. By the end, we had a complete attack timeline: initial access, credential theft, persistence, and C2 communication all reconstructed from logs and memory.
 
 ---
 
-## Phase 1 — Alert Triage: Real or Noise?
+## Phase 1: Alert Triage: Real or Noise?
 
 The first thing I opened was the LimaCharlie dashboard. Three alerts were staring back at me:
 
@@ -22,7 +22,7 @@ The first thing I opened was the LimaCharlie dashboard. Three alerts were starin
 
 - `SUSPICIOUS_POWERSHELL_EXECUTION` — triggered **13 times**
 - `SCHEDULED_TASK_PERSISTENCE` — triggered **8 times**
-- `Mimikatz credential dumping detected` on `desktop-vphn9j8.srmist.edu.in` — triggered **1 time**
+- `Mimikatz credential dumping detected` on `desktop-vphn9j8.srmist.edu.in` triggered **1 time**
 
 In real-world IR, your first job is **triage, not response**. You do not pull the plug on a machine the moment you see an alert  you need to determine if these are true positives before you touch anything. Rushed response destroys forensic evidence.
 
@@ -56,7 +56,7 @@ Activity started on **May 11, 2025**. That's my left boundary. I now had a defin
 
 ---
 
-## Phase 4 — Confirming the Alerts
+## Phase 4: Confirming the Alerts
 
 ### PowerShell Execution True Positive
 
@@ -74,18 +74,18 @@ What came back was not ambiguous at all. The logs showed a sequential, deliberat
 
 The attacker used interactive PowerShell sessions to:
 
-1. Download and execute **Invoke-Mimikatz** in memory via a web cradle — targeting LSASS for credential dumping
+1. Download and execute **Invoke-Mimikatz** in memory via a web cradle targeting LSASS for credential dumping
 2. Pull **SharpHound** to map the Active Directory environment for lateral movement planning
 3. Fetch **PowerUp.ps1** to identify privilege escalation paths — misconfigured services, unquoted paths
 4. Execute commands using **Base64 obfuscation** to evade detection
 5. Establish **NTFS Alternate Data Stream** hiding to bypass file integrity monitoring
 6. Manipulate the **Windows registry** for persistence
 
-All of this happened in a tight window, under the same user context. This is not a false positive — this is a textbook post-exploitation chain. **Confirmed: True Positive.**
+All of this happened in a tight window, under the same user context. This is not a false positive this is a textbook post-exploitation chain. **Confirmed: True Positive.**
 
 ---
 
-### Scheduled Task Persistence — True Positive
+### Scheduled Task Persistence True Positive
 
 Next, I filtered for `SCHEDULED_TASK_PERSISTENCE`.
 
@@ -93,9 +93,9 @@ Next, I filtered for `SCHEDULED_TASK_PERSISTENCE`.
 
 ![Scheduled Task Filter 2](/blog-images/lime/filtersch02.PNG)
 
-The logs told a very specific story. The attacker tested multiple task trigger types — immediate execution as a domain user, startup tasks running under SYSTEM, and logon-triggered tasks. Each one is a different persistence mechanism that survives reboots differently.
+The logs told a very specific story. The attacker tested multiple task trigger types immediate execution as a domain user, startup tasks running under SYSTEM, and logon-triggered tasks. Each one is a different persistence mechanism that survives reboots differently.
 
-The critical event was on **May 18**: a binary named `beacon.exe`, sitting in the user's Downloads directory, directly spawned a scheduled task called `"Windows Services and Tasks"` — configured to re-execute the beacon every **5 minutes**. That is a C2 keep-alive mechanism. The attacker was ensuring that even if the connection dropped, it would automatically re-establish.
+The critical event was on **May 18**: a binary named `beacon.exe`, sitting in the user's Downloads directory, directly spawned a scheduled task called `"Windows Services and Tasks"` configured to re-execute the beacon every **5 minutes**. That is a C2 keep-alive mechanism. The attacker was ensuring that even if the connection dropped, it would automatically re-establish.
 
 **Confirmed: True Positive.**
 
@@ -129,7 +129,7 @@ Port 5985 is **WinRM over HTTP** — Windows Remote Management. A quick search c
 
 ![WinRM Lookup](/blog-images/lime/qu.PNG)
 
-This meant the attacker had remote management access to the box, not just a beacon. WinRM is a legitimate Windows service, which makes it a perfect abuse vector — it blends in with normal administrative traffic.
+This meant the attacker had remote management access to the box, not just a beacon. WinRM is a legitimate Windows service, which makes it a perfect abuse vector it blends in with normal administrative traffic.
 
 ### Process Tree
 
@@ -159,7 +159,7 @@ Once the dump completed, I confirmed it appeared in the artifacts section.
 
 **Real-world tip:** Always capture memory before network isolation if possible. Live memory contains active encryption keys, credentials in plaintext, injected shellcode, and network socket states that disappear the moment the machine loses connectivity or is shut down. Memory is the most volatile evidence you have.
 
-Log collection through LimaCharlie is available on paid tiers — I was on the free version:
+Log collection through LimaCharlie is available on paid tiers I was on the free version:
 
 ![Paid Feature Note](/blog-images/lime/paid.PNG)
 
@@ -376,7 +376,7 @@ JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIA
 
 Decoded: `iex ("Write-Host 'Hello, from PowerShell!'")`
 
-This one was a test of the obfuscation chain — the attacker was verifying that their encoded commands would execute successfully before using the same technique for more damaging operations.
+This one was a test of the obfuscation chain the attacker was verifying that their encoded commands would execute successfully before using the same technique for more damaging operations.
 
 **PowerShell policy bypass and file execution:**
 
