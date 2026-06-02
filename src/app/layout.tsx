@@ -11,10 +11,15 @@ const firaCode = Fira_Code({
   variable: "--font-fira-code",
 });
 
-export const metadata: Metadata = {
-  title: "Bakeery | Security Analyst",
-  description:
-    "Full-stack software engineer specializing in modern web and mobile app technologies",
+export const metadata = {
+  title: 'Bakeery | Security Analyst Portfolio',
+  description: 'Hands-on security labs, incident response walkthroughs, and deep-dive digital forensics case studies.',
+  openGraph: {
+    title: 'Bakeery | Security Analyst Portfolio',
+    description: 'Hands-on security labs, incident response walkthroughs, and deep-dive digital forensics case studies.',
+    url: 'https://bakeery-portfolio.vercel.app/',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
