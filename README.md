@@ -1,4 +1,4 @@
-# Personal Portfolio - Peter Diyo
+# Personal Portfolio
 
 A modern, responsive portfolio website built with Next.js and Tailwind CSS, featuring animations powered by Framer Motion.
 
@@ -21,15 +21,6 @@ A modern, responsive portfolio website built with Next.js and Tailwind CSS, feat
 - `src/components`: Reusable UI components
 - `src/lib`: Utility functions and shared code
 - `convex`: Backend API functions
-
-## Contact
-
-Feel free to reach out to me through any of the following channels:
-- [GitHub](https://github.com/PeterDiyo)
-- [LinkedIn](https://www.linkedin.com/in/peter-diyo-a38451289)
-- [Twitter](https://twitter.com/@peter_diyo)
-- [ClarityText](https://www.claritytext.com/u/peter-diyo-o7aw)
-
 ## Getting Started
 
 ```bash
