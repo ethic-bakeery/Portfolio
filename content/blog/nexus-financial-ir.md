@@ -1,6 +1,6 @@
 ---
 title: "Hunting a Business Email Compromise: A Splunk Investigation"
-date: 2026-03-30
+date: 2026-06-27
 description: "A hands-on walkthrough of investigating a credential phishing attack and account takeover at Nexus Financial from suspicious sign-in alert to full attacker timeline, using Splunk, Entra ID logs, and Microsoft 365 audit trails."
 image: /active/icon.PNG
 category: "Incident Response"
@@ -55,7 +55,7 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 | dedup src_ip
 ```
 
-`dedup src_ip` is key here — Laura likely had multiple sign-ins from her legitimate IP. We want the unique list so the anomaly stands out clearly.
+`dedup src_ip` is key here Laura likely had multiple sign-ins from her legitimate IP. We want the unique list so the anomaly stands out clearly.
 
 ![Splunk query result showing two distinct IPs corporate and the suspicious foreign one](/blog-images/active/q1.PNG)
 
@@ -65,7 +65,7 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 
 ### Q2: What city did the suspicious sign-in originate from?
 
-**The logic:** Now that we've got the attacker's IP, we pivot on it. Add it as a filter and pull the geolocation fields Entra ID enriches automatically.
+Now that we've got the attacker's IP, we pivot on it. Add it as a filter and pull the geolocation fields Entra ID enriches automatically.
 
 ```spl
 index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.thm src_ip=223.123.4.50
@@ -80,7 +80,7 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 
 ### Q3: What was the exact timestamp of the first suspicious sign-in?
 
-**The logic:** Now we want the timeline. When exactly did the attacker first get in? We filter on Laura's account and the Amsterdam city field, then look at the `createdDateTime` column in chronological order.
+Now we want the timeline. When exactly did the attacker first get in? We filter on Laura's account and the Amsterdam city field, then look at the `createdDateTime` column in chronological order.
 
 ```spl
 index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.thm location.city=Amsterdam
@@ -97,7 +97,7 @@ Look at the results carefully you'll likely see some **failed attempts** (wrong 
 
 This is where the investigation gets interesting. **How did the attacker get Laura's credentials?** The most common answer in business environments: a phishing email.
 
-**The logic:** We pivot to `o365:reporting:messagetrace` the email delivery log. We filter by the attacker's IP (`223.123.4.50`) to see if they also sent Laura an email before they used her credentials. This is correlation connecting two different log sources through a shared indicator (the IP address).
+We pivot to `o365:reporting:messagetrace` the email delivery log. We filter by the attacker's IP (`223.123.4.50`) to see if they also sent Laura an email before they used her credentials. This is correlation connecting two different log sources through a shared indicator (the IP address).
 
 ```spl
 index=ir sourcetype="o365:reporting:messagetrace" FromIP=223.123.4.50
@@ -140,7 +140,7 @@ Detection tells you *what happened*. Analysis tells you *how bad it is*. Now we 
 
 ### Q1: How many Nexus Financial accounts show sign-in activity from the attacker's IP?
 
-**The logic:** The attacker sent one phishing email we know about but probably not just one. Search all sign-in logs for that IP across *all* accounts, not just Laura's.
+The attacker sent one phishing email we know about but probably not just one. Search all sign-in logs for that IP across *all* accounts, not just Laura's.
 
 ```spl
 index=ir sourcetype="azure:aad:signin" src_ip=223.123.4.50
@@ -164,7 +164,7 @@ This is a textbook move. After gaining access to a mailbox, attackers often crea
 - Forward a copy of incoming email to themselves
 - Suppress security alerts from IT
 
-**The logic:** Switch to the Unified Audit Log (`o365:management:activity`) which tracks admin-level actions inside M365. Filter on Laura's account and the `New-InboxRule` operation.
+Switch to the Unified Audit Log (`o365:management:activity`) which tracks admin-level actions inside M365. Filter on Laura's account and the `New-InboxRule` operation.
 
 ```spl
 index=ir UserId=l.chen@nexusfinancial.thm sourcetype="o365:management:activity" Operation=New-InboxRule
@@ -179,7 +179,7 @@ The `ObjectId` field will show you the rule name. Whatever it's called, it was p
 
 ### Q3: How many employee accounts received the original phishing email?
 
-**The logic:** We need to know the full delivery scope of the phishing campaign. Switch back to the Unified Audit Logs and search for activity from the attacker's IP across all users this gives us everyone who was targeted, not just those who clicked.
+We need to know the full delivery scope of the phishing campaign. Switch back to the Unified Audit Logs and search for activity from the attacker's IP across all users this gives us everyone who was targeted, not just those who clicked.
 
 ```spl
 index=ir src_ip=223.123.4.50 sourcetype="o365:management:activity"
