@@ -8,7 +8,7 @@ category: "Incident Response"
 
 # Hunting a Business Email Compromise: A Splunk Investigation
 
-> **Scenario:** Nexus Financial. A Finance Manager's account just got flagged. Your job is to find out what happened, how bad it is, and who else got hit — before the attacker moves deeper.
+> **Scenario:** Nexus Financial. A Finance Manager's account just got flagged. Your job is to find out what happened, how bad it is, and who else got hit before the attacker moves deeper.
 
 ---
 
@@ -39,7 +39,7 @@ This is a two-phase investigation: **Detection** (confirm and trace the attack) 
 
 ## Phase 1 Detection: Finding the Attack
 
-The first job is simple: validate Marcus's alert. Don't trust the ticket blindly — go to the logs yourself and confirm it.
+The first job is simple: validate Marcus's alert. Don't trust the ticket blindly go to the logs yourself and confirm it.
 
 ---
 
@@ -74,7 +74,7 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 
 ![Splunk result showing location.city field confirming the sign-in came from Amsterdam](/blog-images/active/q2.PNG)
 
-**Result:** The sign-in originated from **Amsterdam, Netherlands**. That's the attacker's apparent location — or at least the exit node they used.
+**Result:** The sign-in originated from **Amsterdam, Netherlands**. That's the attacker's apparent location or at least the exit node they used.
 
 ---
 
@@ -121,7 +121,7 @@ index=ir sourcetype="o365:reporting:messagetrace" Subject="HR Policy Update — 
 
 ![Message Trace filtered by subject line SenderAddress exposes the phishing domain](/blog-images/active/q5.PNG)
 
-Check the `SenderAddress` field — the domain after the `@` is your phishing domain. It'll look legitimate at a glance (impersonating HR or a trusted internal team), but it won't be `@nexusfinancial.thm`.
+Check the `SenderAddress` field the domain after the `@` is your phishing domain. It'll look legitimate at a glance (impersonating HR or a trusted internal team), but it won't be `@nexusfinancial.thm`.
 
 **At this point, the detection phase is complete.** We've confirmed:
 - The suspicious IP
@@ -132,7 +132,7 @@ Check the `SenderAddress` field — the domain after the `@` is your phishing do
 
 ---
 
-## Phase 2 — Analysis: How Deep Does This Go?
+## Phase 2 Analysis: How Deep Does This Go?
 
 Detection tells you *what happened*. Analysis tells you *how bad it is*. Now we expand the scope.
 
@@ -179,7 +179,7 @@ The `ObjectId` field will show you the rule name. Whatever it's called, it was p
 
 ### Q3: How many employee accounts received the original phishing email?
 
-**The logic:** We need to know the full delivery scope of the phishing campaign. Switch back to the Unified Audit Logs and search for activity from the attacker's IP across all users — this gives us everyone who was targeted, not just those who clicked.
+**The logic:** We need to know the full delivery scope of the phishing campaign. Switch back to the Unified Audit Logs and search for activity from the attacker's IP across all users this gives us everyone who was targeted, not just those who clicked.
 
 ```spl
 index=ir src_ip=223.123.4.50 sourcetype="o365:management:activity"
@@ -219,7 +219,7 @@ Let's tie it all together into one coherent story:
          |
          v
 [6] Attacker also accesses K. Patel's account
-    39 events recorded — deeper activity, needs further investigation
+    39 events recorded deeper activity, needs further investigation
 ```
 
 ---
