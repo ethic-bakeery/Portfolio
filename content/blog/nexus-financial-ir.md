@@ -14,7 +14,7 @@ category: "Incident Response"
 
 ## Setting the Scene
 
-Marcus Webb, a SOC analyst at Nexus Financial, escalated a suspicious sign-in alert. The affected account belongs to **Laura Chen**, a Finance Manager. The sign-in happened outside the UK which is a big red flag since the company operates from there.
+Marcus Webb, a SOC analyst at Nexus Financial, escalated a suspicious sign-in alert. The affected account belongs to **Laura Chen** a Finance Manager. The sign-in happened outside the UK which is a big red flag since the company operates from there.
 
 Here's what Marcus handed over:
 
