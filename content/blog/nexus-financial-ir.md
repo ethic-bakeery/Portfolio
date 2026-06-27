@@ -6,7 +6,7 @@ image: /active/icon.PNG
 category: "Incident Response"
 ---
 
-# Hunting a Business Email Compromise: A Real-World Splunk Investigation
+# Hunting a Business Email Compromise: A Splunk Investigation
 
 > **Scenario:** Nexus Financial. A Finance Manager's account just got flagged. Your job is to find out what happened, how bad it is, and who else got hit — before the attacker moves deeper.
 
