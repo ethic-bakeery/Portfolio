@@ -1,8 +1,8 @@
 ---
-title: "Hunting a Business Email Compromise: A Real-World Splunk Investigation"
+title: "Hunting a Business Email Compromise: A Splunk Investigation"
 date: 2026-03-30
-description: "A hands-on walkthrough of investigating a credential phishing attack and account takeover at Nexus Financial — from suspicious sign-in alert to full attacker timeline, using Splunk, Entra ID logs, and Microsoft 365 audit trails."
-image: /initial/icon.png
+description: "A hands-on walkthrough of investigating a credential phishing attack and account takeover at Nexus Financial from suspicious sign-in alert to full attacker timeline, using Splunk, Entra ID logs, and Microsoft 365 audit trails."
+image: /active/icon.PNG
 category: "Incident Response"
 ---
 
@@ -14,7 +14,7 @@ category: "Incident Response"
 
 ## Setting the Scene
 
-Marcus Webb, a SOC analyst at Nexus Financial, escalated a suspicious sign-in alert. The affected account belongs to **Laura Chen**, a Finance Manager. The sign-in happened outside the UK — which is a big red flag since the company operates from there.
+Marcus Webb, a SOC analyst at Nexus Financial, escalated a suspicious sign-in alert. The affected account belongs to **Laura Chen**, a Finance Manager. The sign-in happened outside the UK which is a big red flag since the company operates from there.
 
 Here's what Marcus handed over:
 
@@ -37,7 +37,7 @@ This is a two-phase investigation: **Detection** (confirm and trace the attack) 
 
 ---
 
-## Phase 1 — Detection: Finding the Attack
+## Phase 1 Detection: Finding the Attack
 
 The first job is simple: validate Marcus's alert. Don't trust the ticket blindly — go to the logs yourself and confirm it.
 
@@ -45,7 +45,7 @@ The first job is simple: validate Marcus's alert. Don't trust the ticket blindly
 
 ### Q1: What IP address did the suspicious sign-in come from?
 
-**Where to look:** `azure:aad:signin` — this is your Entra ID (formerly Azure AD) authentication log. Every sign-in attempt, successful or failed, lands here.
+**Where to look:** `azure:aad:signin` this is your Entra ID (formerly Azure AD) authentication log. Every sign-in attempt, successful or failed, lands here.
 
 **The logic:** We know the account (`l.chen@nexusfinancial.thm`), so filter on that and pull distinct IP addresses. If we see anything that isn't the corporate IP (`197.32.45.112`), that's our suspect.
 
@@ -57,7 +57,7 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 
 `dedup src_ip` is key here — Laura likely had multiple sign-ins from her legitimate IP. We want the unique list so the anomaly stands out clearly.
 
-![Splunk query result showing two distinct IPs — corporate and the suspicious foreign one](/blog-images/active/q1.PNG)
+![Splunk query result showing two distinct IPs corporate and the suspicious foreign one](/blog-images/active/q1.PNG)
 
 **Result:** You'll see the corporate IP, and one foreign IP that doesn't belong: `223.123.4.50`.
 
@@ -87,9 +87,9 @@ index=ir sourcetype="azure:aad:signin" userPrincipalName=l.chen@nexusfinancial.t
 | table createdDateTime, src_ip, location.city, appDisplayName, action
 ```
 
-![Splunk results showing failed attempts followed by a successful sign-in — the first successful entry is the timestamp we need](/blog-images/active/q3.PNG)
+![Splunk results showing failed attempts followed by a successful sign-in the first successful entry is the timestamp we need](/blog-images/active/q3.PNG)
 
-Look at the results carefully — you'll likely see some **failed attempts** (wrong password guesses) before a **successful sign-in**. The first successful one is your answer. That pattern of failures followed by success is a classic credential stuffing or phishing → login sequence.
+Look at the results carefully you'll likely see some **failed attempts** (wrong password guesses) before a **successful sign-in**. The first successful one is your answer. That pattern of failures followed by success is a classic credential stuffing or phishing → login sequence.
 
 ---
 
@@ -97,7 +97,7 @@ Look at the results carefully — you'll likely see some **failed attempts** (wr
 
 This is where the investigation gets interesting. **How did the attacker get Laura's credentials?** The most common answer in business environments: a phishing email.
 
-**The logic:** We pivot to `o365:reporting:messagetrace` — the email delivery log. We filter by the attacker's IP (`223.123.4.50`) to see if they also sent Laura an email before they used her credentials. This is correlation — connecting two different log sources through a shared indicator (the IP address).
+**The logic:** We pivot to `o365:reporting:messagetrace` the email delivery log. We filter by the attacker's IP (`223.123.4.50`) to see if they also sent Laura an email before they used her credentials. This is correlation connecting two different log sources through a shared indicator (the IP address).
 
 ```spl
 index=ir sourcetype="o365:reporting:messagetrace" FromIP=223.123.4.50
@@ -119,7 +119,7 @@ index=ir sourcetype="o365:reporting:messagetrace" Subject="HR Policy Update — 
 | table Received, SenderAddress, RecipientAddress, Subject, Status, FromIP
 ```
 
-![Message Trace filtered by subject line — SenderAddress exposes the phishing domain](/blog-images/active/q5.PNG)
+![Message Trace filtered by subject line SenderAddress exposes the phishing domain](/blog-images/active/q5.PNG)
 
 Check the `SenderAddress` field — the domain after the `@` is your phishing domain. It'll look legitimate at a glance (impersonating HR or a trusted internal team), but it won't be `@nexusfinancial.thm`.
 
@@ -140,7 +140,7 @@ Detection tells you *what happened*. Analysis tells you *how bad it is*. Now we 
 
 ### Q1: How many Nexus Financial accounts show sign-in activity from the attacker's IP?
 
-**The logic:** The attacker sent one phishing email we know about — but probably not just one. Search all sign-in logs for that IP across *all* accounts, not just Laura's.
+**The logic:** The attacker sent one phishing email we know about but probably not just one. Search all sign-in logs for that IP across *all* accounts, not just Laura's.
 
 ```spl
 index=ir sourcetype="azure:aad:signin" src_ip=223.123.4.50
@@ -150,8 +150,8 @@ index=ir sourcetype="azure:aad:signin" src_ip=223.123.4.50
 ![stats count showing two accounts with sign-in activity from the attacker's IP — l.chen with 18 events and k.patel with 39](/blog-images/active/q6.PNG)
 
 **Result:** Two accounts show activity:
-- `l.chen@nexusfinancial.thm` — 18 events
-- `k.patel@nexusfinancial.thm` — 39 events
+- `l.chen@nexusfinancial.thm` —> 18 events
+- `k.patel@nexusfinancial.thm` —> 39 events
 
 So the attacker compromised **2 accounts**. K. Patel's account had significantly more activity (39 vs 18), which suggests deeper post-compromise actions there. That's a priority for further investigation.
 
@@ -189,7 +189,7 @@ index=ir src_ip=223.123.4.50 sourcetype="o365:management:activity"
 
 ![Unified Audit Log results showing the full list of unique user IDs that had activity from the attacker's IP](/blog-images/active/q8.PNG)
 
-This count tells you the total blast radius of the initial phishing wave. Every account in this list needs to be reviewed — even if they didn't sign in from Amsterdam, they may have clicked a link and entered credentials into a fake page that wasn't captured in these logs.
+This count tells you the total blast radius of the initial phishing wave. Every account in this list needs to be reviewed even if they didn't sign in from Amsterdam, they may have clicked a link and entered credentials into a fake page that wasn't captured in these logs.
 
 ---
 
@@ -234,7 +234,7 @@ A few things worth highlighting from this investigation that apply beyond just t
 
 **One alert usually means multiple victims.** When you find an attacker's IP in sign-in logs, your first instinct should be to expand the search across all users immediately. The 39 events on K. Patel's account suggest that was actually the more serious compromise of the two.
 
-**Timestamps matter.** Always establish the sequence: email delivered → sign-in → inbox rule created. If the timeline doesn't make sense, you've got the wrong hypothesis. The logs don't lie — but they need to be read in order.
+**Timestamps matter.** Always establish the sequence: email delivered → sign-in → inbox rule created. If the timeline doesn't make sense, you've got the wrong hypothesis. The logs don't lie but they need to be read in order.
 
 ---
 
