@@ -5,6 +5,28 @@ import { useInView } from "react-intersection-observer";
 import Navbar from "@/components/Navbar";
 
 const experiences = [
+
+  {
+  title: "SOC Analyst",
+  company: "Kolomoni Microfinance Bank",
+  period: "October 2026 – Present",
+  description: [
+    "I work as a Security Operations Center (SOC) Analyst at Kolomoni, where I monitor and investigate security events across cloud infrastructure, endpoints, and enterprise environments to identify potential threats.",
+    "I investigate security alerts using tools like CrowdStrike Falcon and USM Anywhere, analyzing suspicious processes, network activity, authentication events, and cloud audit logs to determine whether activities are malicious or legitimate.",
+    "My work involves threat detection, incident investigation, vulnerability analysis, and escalating security incidents while working with IT and engineering teams to resolve potential security risks.",
+    "I'm particularly interested in understanding attacker behavior, improving detection capabilities, and developing the technical skills needed to build and strengthen security systems."
+  ],
+  tech: [
+    "CrowdStrike Falcon",
+    "USM Anywhere (AlienVault)",
+    "AWS Security & CloudTrail",
+    "Google Cloud Security",
+    "Microsoft 365 Security",
+    "Threat Detection & Incident Response",
+    "Log Analysis & Threat Hunting",
+    "Endpoint Detection & Response (EDR)"
+  ]
+},
   {
     title: "Bug Bounty Hunter",
     company: "YesWeHack & Private Programs",
